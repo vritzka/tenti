@@ -52,7 +52,7 @@ public:
         double tentHumidity;
         double soilTemperatureC;
         double soilTemperatureF;
-        int waterLevel;
+        double waterLevel;
     } sensors;
 
     struct {
