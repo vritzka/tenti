@@ -5,6 +5,7 @@
 
 class WifiScreen : public Screen {
 public:
+    WifiScreen();
     String getName() { return "wifiScreen"; }
     void render();
     void renderButton(Button& btn);
