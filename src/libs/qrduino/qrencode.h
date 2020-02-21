@@ -8,6 +8,10 @@
 #define USEPRECALC
 #endif
 
+#ifdef SPARK
+#define USEPRECALC
+#endif
+
 #ifndef USEPRECALC
 // malloc-ed by initframe, free manually
 extern unsigned char *strinbuf; // string iput buffer
