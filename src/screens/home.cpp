@@ -135,7 +135,12 @@ void HomeScreen::drawSoilMoistureMeter()
 
 void HomeScreen::drawSoilMoisture()
 {
-    int waterLevelHeight = floor((waterLevelBoxHeight / 100) * tent.sensors.waterLevel);
+    int waterLevel = tent.sensors.waterLevel;
+    if (waterLevel > 99)
+        waterLevel = 00;
+    else if (waterLevel < 0)
+        waterLevel = 0;
+    int waterLevelHeight = floor((waterLevelBoxHeight / 100) * waterLevel);
     int waterLevelTop = (waterLevelBoxHeight - waterLevelHeight) + waterLevelBoxTop - 1;
 
     //draw black over remainder
