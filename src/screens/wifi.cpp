@@ -2,10 +2,23 @@
 #include "icons.h"
 #include "tent.h"
 #include "screen_manager.h"
+#include <Arduino.h>
+extern "C" {
+#include "libs/qrduino/qrencode.h"
+}
 
 extern ScreenManager screenManager;
 extern Tent tent;
 extern uint16_t __system_product_version;
+
+WifiScreen::WifiScreen() : Screen()
+{
+    if (strinbuf[0] == 0) {
+        String url = "https://my.tomatotent.com/graphs/" + System.deviceID();
+        strncpy((char*)strinbuf, url.c_str(), 245);
+        qrencode();
+    }
+}
 
 void WifiScreen::render()
 {
@@ -25,26 +38,32 @@ void WifiScreen::render()
     else
         tft.print("Disconnected");
 
-    tft.setCursor(18, 57);
-    tft.setTextColor(ILI9341_LIGHTGREY);
-    tft.print("https://my.tomatotent.com/graphs/");
-
-    tft.setCursor(18, 71);
-    tft.setTextSize(2);
-    tft.print(System.deviceID().c_str());
-
-    tft.setCursor(55, 210);
+    tft.setCursor(60, 52);
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_LIGHTGREY);
-
-    tft.print(String::format("TomatoTent v%d", __system_product_version));
-
+    tft.print(String::format("TomatoTent v%d ", __system_product_version));
     if (WiFi.ready())
-        tft.print(String::format(" on http://%s", WiFi.localIP().toString().c_str()));
+        tft.print("on http://" + WiFi.localIP().toString());
 
-    buttons.push_back(Button("wifiOnBtn", 30, 100, 125, 38, "On", 50, 8));
-    buttons.push_back(Button("wifiOffBtn", 160, 100, 125, 38, "Off", 40, 8));
-    buttons.push_back(Button("wifiOkBtn", 30, 160, 255, 38, "Back", 100, 8));
+    int x, y, xOffset = 220, yOffset = 90;
+    tft.setTextSize(1);
+    tft.setTextColor(ILI9341_WHITE);
+    tft.setCursor(xOffset, yOffset);
+    tft.print("Grow Graphs");
+    for (y = 0; y < WD; y++) {
+        for (x = 0; x < WD; x++) {
+            int color = QRBIT(x, y) ? ILI9341_WHITE : ILI9341_BLACK;
+            int x0 = xOffset + x * 2, y0 = yOffset + 12 + y * 2;
+            tft.drawPixel(x0, y0, color);
+            tft.drawPixel(x0 + 1, y0, color);
+            tft.drawPixel(x0, y0 + 1, color);
+            tft.drawPixel(x0 + 1, y0 + 1, color);
+        }
+    }
+
+    buttons.push_back(Button("wifiOnBtn", 30, 100, 80, 38, "On", 25, 8));
+    buttons.push_back(Button("wifiOffBtn", 115, 100, 80, 38, "Off", 16, 8));
+    buttons.push_back(Button("wifiOkBtn", 30, 150, 165, 38, "Back", 50, 8));
 
     renderButtons(true);
 }
