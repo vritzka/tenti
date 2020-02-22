@@ -441,8 +441,8 @@ void Tent::adjustFan()
             fanSpeedPercent += 15;
         }
 
-        if (sensors.tentHumidity > 75 && fanSpeedPercent < 25)
-            fanSpeedPercent = 25;
+        if (sensors.tentHumidity > 60 && fanSpeedPercent < 15)
+            fanSpeedPercent = 15;
 
         //sensor fail
         if (sensors.tentTemperatureF > 200 || sensors.tentHumidity > 200)
