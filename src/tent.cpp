@@ -405,6 +405,7 @@ void Tent::adjustFan()
 
         if (!state.isDay())
             step = 1;
+            
 
         if (sensors.tentTemperatureF > 70) {
             fanSpeedPercent += step;
