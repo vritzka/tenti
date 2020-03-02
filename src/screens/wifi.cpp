@@ -11,7 +11,8 @@ extern ScreenManager screenManager;
 extern Tent tent;
 extern uint16_t __system_product_version;
 
-WifiScreen::WifiScreen() : Screen()
+WifiScreen::WifiScreen()
+    : Screen()
 {
     if (strinbuf[0] == 0) {
         String url = "https://my.tomatotent.com/graphs/" + System.deviceID();
