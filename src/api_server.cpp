@@ -96,8 +96,8 @@ void apiFanCmd(WebServer& server, WebServer::ConnectionType type, char* url_tail
         } else if (json["mode"] == "manual") {
             tent.state.setFanAutoMode(false);
             int speed = json["speed"];
-            if (speed > 5 && speed <= 100) {
-                tent.state.setFanSpeed(speed - 5);
+            if (speed > 0 && speed <= 100) {
+                tent.state.setFanSpeed(speed);
             }
         }
         tent.adjustFan();
