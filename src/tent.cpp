@@ -72,21 +72,32 @@ void Tent::checkTent()
 {
     double rawTemp = sht20.readTemperature();
     if (rawTemp == 998.0) {
-        if (sensors.tentTemperatureC != -1) {
-            sensors.tentTemperatureC = sensors.tentTemperatureF = -1;
-            screenManager.markNeedsRedraw(TEMPERATURE);
+        bool updated = sht30.update();
+        
+        if (!updated || sht30.temperature > 900) {
+            
+            if (sensors.tentTemperatureC != -1) {
+                sensors.tentTemperatureC = sensors.tentTemperatureF = -1;
+                screenManager.markNeedsRedraw(TEMPERATURE);
+            }
+            
+            if (sensors.tentHumidity != -1) {
+                sensors.tentHumidity = -1;
+                screenManager.markNeedsRedraw(HUMIDITY);
+            }
+            
+            rawSensors.tentTemperature = -1;
+            rawSensors.tentHumidity = -1;
+            return;
         }
-        if (sensors.tentHumidity != -1) {
-            sensors.tentHumidity = -1;
-            screenManager.markNeedsRedraw(HUMIDITY);
-        }
-        rawSensors.tentTemperature = -1;
-        rawSensors.tentHumidity = -1;
-        return;
+        
+        rawSensors.tentTemperature = (int)(sht30.temperature * 10) / 10.0;
+        rawSensors.tentHumidity = (int)(sht30.humidity * 10) / 10.0;
+        
+    } else {
+        rawSensors.tentTemperature = rawTemp;
+        rawSensors.tentHumidity = sht20.readHumidity();
     }
-
-    rawSensors.tentTemperature = rawTemp;
-    rawSensors.tentHumidity = sht20.readHumidity();
 
     double currentTemp = (int)(rawSensors.tentTemperature * 10) / 10.0;
     double currentHumidity = (int)(rawSensors.tentHumidity * 10) / 10.0;
