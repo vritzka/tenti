@@ -91,8 +91,8 @@ void Tent::checkTent()
             return;
         }
         
-        rawSensors.tentTemperature = (int)(sht30.temperature * 10) / 10.0;
-        rawSensors.tentHumidity = (int)(sht30.humidity * 10) / 10.0;
+        rawSensors.tentTemperature = sht30.temperature;
+        rawSensors.tentHumidity = sht30.humidity;
         
     } else {
         rawSensors.tentTemperature = rawTemp;
