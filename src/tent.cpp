@@ -73,27 +73,27 @@ void Tent::checkTent()
     double rawTemp = sht20.readTemperature();
     if (rawTemp == 998.0) {
         bool updated = sht30.update();
-        
+
         if (!updated || sht30.temperature > 900) {
-            
+
             if (sensors.tentTemperatureC != -1) {
                 sensors.tentTemperatureC = sensors.tentTemperatureF = -1;
                 screenManager.markNeedsRedraw(TEMPERATURE);
             }
-            
+
             if (sensors.tentHumidity != -1) {
                 sensors.tentHumidity = -1;
                 screenManager.markNeedsRedraw(HUMIDITY);
             }
-            
+
             rawSensors.tentTemperature = -1;
             rawSensors.tentHumidity = -1;
             return;
         }
-        
+
         rawSensors.tentTemperature = sht30.temperature;
         rawSensors.tentHumidity = sht30.humidity;
-        
+
     } else {
         rawSensors.tentTemperature = rawTemp;
         rawSensors.tentHumidity = sht20.readHumidity();
@@ -196,9 +196,9 @@ void Tent::checkInputs()
 
     unsigned long now = millis();
     unsigned long diff = now - lastDimmerBtnTime;
-    
-    if(diff <= 300) {
-        return;    
+
+    if (diff <= 300) {
+        return;
     }
 
     lastDimmerBtnTime = now;
