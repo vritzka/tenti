@@ -196,11 +196,15 @@ void Tent::checkInputs()
 
     unsigned long now = millis();
     unsigned long diff = now - lastDimmerBtnTime;
+    
+    if(diff <= 300) {
+        return;    
+    }
 
     lastDimmerBtnTime = now;
     dimmerBtnPressed = false;
 
-    if (diff <= 300 && growLightStatus == "LOW") {
+    if (diff <= 600 && growLightStatus == "LOW") {
         muteGrowLight();
     } else {
         dimGrowLight();
