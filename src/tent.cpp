@@ -162,7 +162,7 @@ void Tent::fan(String fanStatus)
     if (fanStatus == "OFF") {
         analogWrite(FAN_SPEED_PIN, 255, 25000);
     } else {
-        int fanSpeed = map(state.getFanSpeed(), 0.0, 100.0, 0.0, 255.0);
+        int fanSpeed = map(state.getFanSpeed(), 0.0, 100.0, 0.0, 153.0);
         analogWrite(FAN_SPEED_PIN, 255 - fanSpeed, 25000);
     }
 }
@@ -460,7 +460,7 @@ void Tent::adjustFan()
 
         //sensor fail
         if (sensors.tentTemperatureF > 200 || sensors.tentHumidity > 200)
-            fanSpeedPercent = FAN_SPEED_MIN + 15;
+            fanSpeedPercent = FAN_SPEED_MIN + 20;
 
         if (fanSpeedPercent != state.getFanSpeed()) {
             state.setFanSpeed(fanSpeedPercent);
