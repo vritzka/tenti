@@ -72,21 +72,32 @@ void Tent::checkTent()
 {
     double rawTemp = sht20.readTemperature();
     if (rawTemp == 998.0) {
-        if (sensors.tentTemperatureC != -1) {
-            sensors.tentTemperatureC = sensors.tentTemperatureF = -1;
-            screenManager.markNeedsRedraw(TEMPERATURE);
-        }
-        if (sensors.tentHumidity != -1) {
-            sensors.tentHumidity = -1;
-            screenManager.markNeedsRedraw(HUMIDITY);
-        }
-        rawSensors.tentTemperature = -1;
-        rawSensors.tentHumidity = -1;
-        return;
-    }
+        bool updated = sht30.update();
 
-    rawSensors.tentTemperature = rawTemp;
-    rawSensors.tentHumidity = sht20.readHumidity();
+        if (!updated || sht30.temperature > 900) {
+
+            if (sensors.tentTemperatureC != -1) {
+                sensors.tentTemperatureC = sensors.tentTemperatureF = -1;
+                screenManager.markNeedsRedraw(TEMPERATURE);
+            }
+
+            if (sensors.tentHumidity != -1) {
+                sensors.tentHumidity = -1;
+                screenManager.markNeedsRedraw(HUMIDITY);
+            }
+
+            rawSensors.tentTemperature = -1;
+            rawSensors.tentHumidity = -1;
+            return;
+        }
+
+        rawSensors.tentTemperature = sht30.temperature;
+        rawSensors.tentHumidity = sht30.humidity;
+
+    } else {
+        rawSensors.tentTemperature = rawTemp;
+        rawSensors.tentHumidity = sht20.readHumidity();
+    }
 
     double currentTemp = (int)(rawSensors.tentTemperature * 10) / 10.0;
     double currentHumidity = (int)(rawSensors.tentHumidity * 10) / 10.0;
@@ -186,10 +197,14 @@ void Tent::checkInputs()
     unsigned long now = millis();
     unsigned long diff = now - lastDimmerBtnTime;
 
+    if (diff <= 300) {
+        return;
+    }
+
     lastDimmerBtnTime = now;
     dimmerBtnPressed = false;
 
-    if ((diff <= 500 && diff >= 150) && growLightStatus == "LOW") {
+    if (diff <= 600 && growLightStatus == "LOW") {
         muteGrowLight();
     } else {
         dimGrowLight();
