@@ -7,13 +7,14 @@
 #include "api_server.h"
 
 PRODUCT_ID(10167);
-PRODUCT_VERSION(19);
+PRODUCT_VERSION(20);
 
 Tent tent;
 ScreenManager screenManager;
 ApiServer server;
 
 SYSTEM_MODE(SEMI_AUTOMATIC);
+SYSTEM_THREAD(ENABLED);
 
 struct Page {
     const char* url;
@@ -86,6 +87,7 @@ STARTUP(
     pinMode(GROW_LIGHT_BRIGHTNESS_PIN, OUTPUT);
     pinMode(GROW_LIGHT_ON_OFF_PIN, OUTPUT);
     pinMode(DIM_PIN, INPUT_PULLUP);)
+    
 
 void setup()
 {
@@ -96,23 +98,22 @@ void setup()
 
     WiFi.setHostname("TomatoTent-" + System.deviceID());
 
-    if (WiFi.hasCredentials()) {
-        Particle.connect();
-    } else {
-        WiFi.off();
-    }
-
-    // Time.zone(+8);
-
     screenManager.setup();
     screenManager.homeScreen();
+    
     tent.setup();
 
     server.begin();
+    
+    if (WiFi.hasCredentials()) {
+        Particle.connect();
+    } 
+    
 }
 
 void loop(void)
 {
+
     screenManager.tick();
 
     tent.checkInputs();

@@ -36,6 +36,8 @@ void WifiScreen::render()
     tft.setTextSize(1);
     if (WiFi.ready())
         tft.print(String::format("Connected: %s (%d%%)", WiFi.SSID(), (int)WiFi.RSSI().getStrength()));
+    else if(WiFi.connecting())
+        tft.print("Connecting ...");
     else
         tft.print("Disconnected");
 
@@ -72,10 +74,10 @@ void WifiScreen::render()
 void WifiScreen::renderButton(Button& btn)
 {
     if (btn.getName() == "wifiOnBtn") {
-        drawButton(btn, WiFi.ready() ? ILI9341_OLIVE : ILI9341_BLACK, 3);
+        drawButton(btn, WiFi.ready() || WiFi.connecting() ? ILI9341_OLIVE : ILI9341_BLACK, 3);
 
     } else if (btn.getName() == "wifiOffBtn") {
-        drawButton(btn, !WiFi.ready() ? ILI9341_OLIVE : ILI9341_BLACK, 3);
+        drawButton(btn, !WiFi.ready() && !WiFi.connecting() ? ILI9341_OLIVE : ILI9341_BLACK, 3);
 
     } else if (btn.getName() == "wifiOkBtn") {
         drawButton(btn, ILI9341_OLIVE, 3);
@@ -93,10 +95,8 @@ void WifiScreen::handleButton(Button& btn)
         screenManager.homeScreen();
 
     } else if (btn.getName() == "wifiOffBtn") {
-        Particle.disconnect();
         WiFi.off();
         screenManager.homeScreen();
-
     } else if (btn.getName() == "wifiOkBtn") {
         screenManager.homeScreen();
     }
