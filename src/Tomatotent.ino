@@ -7,7 +7,7 @@
 #include "api_server.h"
 
 PRODUCT_ID(10167);
-PRODUCT_VERSION(20);
+PRODUCT_VERSION(21);
 
 Tent tent;
 ScreenManager screenManager;
@@ -97,17 +97,17 @@ void setup()
     System.on(setup_end, setup_finished_handler);
 
     WiFi.setHostname("TomatoTent-" + System.deviceID());
+     
+    screenManager.setup();
+    screenManager.homeScreen();
+    tent.setup();
     
     if (WiFi.hasCredentials()) {		
          Particle.connect();		
     } else {		
          WiFi.off();		
-    }
-     
-    screenManager.setup();
-    screenManager.homeScreen();
-    tent.setup();
-
+    }  
+    
     server.begin();
     
 }
