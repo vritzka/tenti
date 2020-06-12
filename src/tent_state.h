@@ -14,6 +14,7 @@ class TentState {
         bool fanAutoMode; // 1 for auto, 0 for manual
         float fanSpeed; // 0-100%
         char tempUnit;
+        bool wifiStatus;
     } eeprom;
 
 public:
@@ -28,6 +29,7 @@ public:
         eeprom.fanAutoMode = 1;
         eeprom.fanSpeed = 30;
         eeprom.tempUnit = 'F';
+        eeprom.wifiStatus = 1;
         save();
     }
     void migrate()
@@ -60,4 +62,7 @@ public:
 
     char getTempUnit(void);
     void setTempUnit(char);
+    
+    bool getWifiStatus(void);
+    void setWifiStatus(bool);
 };

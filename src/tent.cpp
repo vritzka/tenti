@@ -50,6 +50,9 @@ void Tent::setup()
     }
 
     state.begin();
+    
+    if(state.getWifiStatus())
+        Particle.connect();
 }
 
 void Tent::start()

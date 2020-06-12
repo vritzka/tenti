@@ -109,13 +109,7 @@ void setup()
     screenManager.homeScreen();
     tent.setup();
     
-    System.on(firmware_update, firmware_update_handler);
-    
-    if (WiFi.hasCredentials()) {		
-         Particle.connect();		
-    } else {		
-         WiFi.off();		
-    }  
+    System.on(firmware_update, firmware_update_handler); 
     
     server.begin();
     

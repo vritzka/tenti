@@ -92,10 +92,12 @@ void WifiScreen::handleButton(Button& btn)
 {
     if (btn.getName() == "wifiOnBtn") {
         Particle.connect();
+        tent.state.setWifiStatus(1);
         screenManager.homeScreen();
 
     } else if (btn.getName() == "wifiOffBtn") {
         WiFi.off();
+        tent.state.setWifiStatus(0);
         screenManager.homeScreen();
     } else if (btn.getName() == "wifiOkBtn") {
         screenManager.homeScreen();

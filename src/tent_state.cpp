@@ -80,6 +80,17 @@ void TentState::setTempUnit(char tempUnit)
     save();
 }
 
+void TentState::setWifiStatus(bool status)
+{
+    eeprom.wifiStatus = status;
+    save();
+}
+
+bool TentState::getWifiStatus()
+{
+    return eeprom.wifiStatus;
+}
+
 float TentState::getFanSpeed()
 {
     return eeprom.fanSpeed;
