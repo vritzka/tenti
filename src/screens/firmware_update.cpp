@@ -11,7 +11,7 @@ void FirmwareUpdateScreen::render()
     tft.setCursor(50, 30);
     tft.print("Firmware Updating...");
     tft.setCursor(60, 90);
-    tft.print("Please wait.");
+    tft.print("Please wait");
 
     tft.drawBitmap(124, 160, plant_filled_72x72, 72, 72, ILI9341_WHITE);
 }
