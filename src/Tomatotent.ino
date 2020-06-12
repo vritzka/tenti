@@ -86,9 +86,9 @@ STARTUP(
     pinMode(TFT_BRIGHTNESS_PIN, OUTPUT);
     pinMode(GROW_LIGHT_BRIGHTNESS_PIN, OUTPUT);
     pinMode(GROW_LIGHT_ON_OFF_PIN, OUTPUT);
-    pinMode(DIM_PIN, INPUT_PULLUP);)
+    pinMode(DIM_PIN, INPUT_PULLUP);
+)
     
-
 void setup()
 {
     System.set(SYSTEM_CONFIG_SOFTAP_PREFIX, "TomatoTent");
