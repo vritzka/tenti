@@ -88,6 +88,13 @@ STARTUP(
     pinMode(GROW_LIGHT_ON_OFF_PIN, OUTPUT);
     pinMode(DIM_PIN, INPUT_PULLUP);
 )
+
+void firmware_update_handler(system_event_t event, int status)
+{
+    if(status == firmware_update_begin) {
+        screenManager.firmwareUpdateScreen();    
+    }
+}
     
 void setup()
 {
@@ -101,6 +108,8 @@ void setup()
     screenManager.setup();
     screenManager.homeScreen();
     tent.setup();
+    
+    System.on(firmware_update, firmware_update_handler);
     
     if (WiFi.hasCredentials()) {		
          Particle.connect();		

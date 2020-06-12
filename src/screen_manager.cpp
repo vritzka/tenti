@@ -4,6 +4,7 @@
 #include "screens/cancel_confirm.h"
 #include "screens/timer.h"
 #include "screens/fan.h"
+#include "screens/firmware_update.h"
 #include "screens/temp_unit.h"
 #include "screens/grow_started.h"
 #include "screens/wifi_splash.h"
@@ -94,6 +95,12 @@ void ScreenManager::wifiSplashScreen()
 void ScreenManager::fanScreen()
 {
     current.reset(new FanScreen());
+    render();
+}
+
+void ScreenManager::firmwareUpdateScreen()
+{
+    current.reset(new FirmwareUpdateScreen());
     render();
 }
 
