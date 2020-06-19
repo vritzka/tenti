@@ -51,7 +51,7 @@ void Tent::setup()
 
     state.begin();
     
-    if(state.getWifiStatus())
+    if(state.getWifiStatus() && WiFi.hasCredentials())
         Particle.connect();
 }
 
