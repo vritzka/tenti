@@ -126,9 +126,7 @@ void HomeScreen::drawHumidity()
 
 void HomeScreen::drawSoilMoistureMeter()
 {
-    
     float temp = tent.sensors.soilTemperatureF;
-
     if (temp <= 0) {
         return;
     }
@@ -142,7 +140,6 @@ void HomeScreen::drawSoilMoistureMeter()
 
 void HomeScreen::drawSoilMoisture()
 {
-    
     float temp = tent.sensors.soilTemperatureF;
 
     if (temp <= 0) {
@@ -150,8 +147,7 @@ void HomeScreen::drawSoilMoisture()
     }
 
     double waterLevel = tent.sensors.waterLevel;
-  
-    
+
     if (waterLevel >= 100)
         waterLevel = 99.9;
     else if (waterLevel < 0)
