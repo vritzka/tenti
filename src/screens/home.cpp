@@ -126,6 +126,13 @@ void HomeScreen::drawHumidity()
 
 void HomeScreen::drawSoilMoistureMeter()
 {
+    
+    float temp = tent.sensors.soilTemperatureF;
+
+    if (temp <= 0) {
+        return;
+    }
+    
     //icon
     tft.drawBitmap(280, waterLevelBoxTop - 30, iconWateringCan_24x24, 24, 24, ILI9341_GREEN);
 
@@ -135,13 +142,23 @@ void HomeScreen::drawSoilMoistureMeter()
 
 void HomeScreen::drawSoilMoisture()
 {
+    
+    float temp = tent.sensors.soilTemperatureF;
+
+    if (temp <= 0) {
+        return;
+    }
+
     double waterLevel = tent.sensors.waterLevel;
+  
+    
     if (waterLevel >= 100)
         waterLevel = 99.9;
     else if (waterLevel < 0)
         waterLevel = 0;
     int waterLevelHeight = floor((waterLevelBoxHeight / 100) * waterLevel);
     int waterLevelTop = (waterLevelBoxHeight - waterLevelHeight) + waterLevelBoxTop - 1;
+
 
     //draw black over remainder
     tft.fillRect(281, waterLevelBoxTop + 1, 23, waterLevelBoxHeight - waterLevelHeight - 2, ILI9341_BLACK);
