@@ -16,7 +16,7 @@ void CancelScreen::render()
     buttons.push_back(Button("dayDownBtn", 50, 135, 40, 40, "", 0, 0));
 
     buttons.push_back(Button("cancelScreenOkBtn", 160, 70, 145, 38, "Ok", 60, 8));
-    buttons.push_back(Button("terminateBtn", 160, 130, 145, 28, "End Grow", 30, 7));
+    buttons.push_back(Button("terminateBtn", 160, 130, 145, 28, "End", 56, 7));
 
     renderButtons(true);
 }

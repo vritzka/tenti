@@ -23,31 +23,57 @@ void HomeScreen::render()
         tft.setCursor(126, 15);
         tft.print("Hi,");
 
-        tft.setCursor(75, 40);
+        tft.setCursor(85, 40);
         tft.print("I'm Tomatotent.");
 
-        tft.drawBitmap(110, 65, tomato_filled_100, 100, 100, ILI9341_RED);
+        tft.drawBitmap(20, 20, tomato_filled_50, 50, 50, ILI9341_RED);
 
-        buttons.push_back(Button("startGrowBtn", 35, 180, 250, 38, "Start a Grow", 18, 8));
+        buttons.push_back(Button("startGrowBtn", 25, 100, 270, 38, "Start a Grow", 28, 8));
+        buttons.push_back(Button("startDryingBtn", 25, 170, 270, 38, "Dry a Harvest", 18, 8));
+        
 
-    } else { // a grow is in progress
+    } else { // a grow/dry is in progress
 
-        tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
-        tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_WHITE);
-
-        drawDayCounter();
-        drawTemperature();
-        drawHumidity();
-        drawSoilMoistureMeter();
-        drawSoilMoisture();
-        drawSoilTemperature();
-        drawTimerStatus();
-        drawFanStatus();
-
-        buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
-        buttons.push_back(Button("timerBtn", 10, 10, 115, 30, "", 18, 8));
-        buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
-        buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8));
+        switch (tent.state.getMode())
+        {
+            case 'g':
+                tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
+                tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_WHITE);
+        
+                drawDayCounter();
+                drawTemperature();
+                drawHumidity();
+                drawSoilMoistureMeter();
+                drawSoilMoisture();
+                drawSoilTemperature();
+                drawTimerStatus();
+                drawFanStatus();
+        
+                buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
+                buttons.push_back(Button("timerBtn", 10, 10, 115, 30, "", 18, 8));
+                buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
+                buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8));
+                break;
+            case 'd':
+                tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
+                tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_WHITE);
+                tft.drawBitmap(20,4,dry_36,36,36, ILI9341_YELLOW);
+                tft.setCursor(65, 14);
+                tft.setTextColor(ILI9341_YELLOW);
+                tft.setTextSize(2);
+                tft.print("Drying");
+        
+                drawDayCounter();
+                drawTemperature();
+                drawHumidity();
+                drawFanStatus();
+        
+                buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
+                buttons.push_back(Button("timerBtn", 10, 10, 115, 30, "", 18, 8));
+                buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
+                buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8));                break;
+        }      
+        
     }
 
     renderButtons(true);
@@ -64,20 +90,23 @@ void HomeScreen::update()
         return;
     }
 
-    if (screenManager.wasNeedsRedraw(TIMER))
-        drawTimerStatus();
     if (screenManager.wasNeedsRedraw(TEMPERATURE))
         drawTemperature();
     if (screenManager.wasNeedsRedraw(HUMIDITY))
         drawHumidity();
-    if (screenManager.wasNeedsRedraw(SOIL_MOISTURE))
-        drawSoilMoisture();
-    if (screenManager.wasNeedsRedraw(SOIL_TEMPERATURE))
-        drawSoilTemperature();
     if (screenManager.wasNeedsRedraw(FAN))
         drawFanStatus();
     if (screenManager.wasNeedsRedraw(DAY))
         drawDayCounter();
+        
+    if(tent.state.getMode() == 'g') {
+        if (screenManager.wasNeedsRedraw(TIMER))
+            drawTimerStatus();
+        if (screenManager.wasNeedsRedraw(SOIL_MOISTURE))
+            drawSoilMoisture();
+        if (screenManager.wasNeedsRedraw(SOIL_TEMPERATURE))
+            drawSoilTemperature();   
+    }
 
     Screen::update();
 }
@@ -154,7 +183,6 @@ void HomeScreen::drawSoilMoisture()
         waterLevel = 0;
     int waterLevelHeight = floor((waterLevelBoxHeight / 100) * waterLevel);
     int waterLevelTop = (waterLevelBoxHeight - waterLevelHeight) + waterLevelBoxTop - 1;
-
 
     //draw black over remainder
     tft.fillRect(281, waterLevelBoxTop + 1, 23, waterLevelBoxHeight - waterLevelHeight - 2, ILI9341_BLACK);
@@ -260,7 +288,8 @@ void HomeScreen::renderButton(Button& btn)
 {
     if (btn.getName() == "startGrowBtn") {
         drawButton(btn, ILI9341_OLIVE, 3);
-
+    } else if (btn.getName() == "startDryingBtn") {
+        drawButton(btn, ILI9341_OLIVE, 3); 
     } else if (btn.getName() == "wifiBtn") {
         tft.drawBitmap(btn.x0 + 19, btn.y0 + 5, iconWifi_24x24, 24, 24, WiFi.ready() ? ILI9341_LIGHTGREY : ILI9341_DARKGREY);
     }
@@ -273,12 +302,16 @@ void HomeScreen::renderButtonPressed(Button& btn)
     if (btn.getName() == "startGrowBtn") {
         tft.drawRect(x0, y0, w, h, ILI9341_RED);
     }
+    if (btn.getName() == "startDryingBtn") {
+        tft.drawRect(x0, y0, w, h, ILI9341_RED);
+    }
 }
 
 void HomeScreen::handleButton(Button& btn)
 {
     if (btn.getName() == "startGrowBtn") {
         tent.growLight("HIGH");
+        tent.state.setMode('g');
         tent.state.setDayCount(1);
 
         screenManager.growStartedScreen();
@@ -287,7 +320,19 @@ void HomeScreen::handleButton(Button& btn)
 
         screenManager.homeScreen();
         tent.start();
+        
+    } else if (btn.getName() == "startDryingBtn") {
+        tent.state.setMode('d');
+        tent.state.setDayDuration(0);
+        tent.state.setDayCount(1);
 
+        //screenManager.dryingStartedScreen();
+
+        delay(600);
+
+        screenManager.homeScreen();
+        tent.start();
+        
     } else if (btn.getName() == "wifiBtn") {
         screenManager.wifiScreen();
 

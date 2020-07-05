@@ -8,7 +8,7 @@ const int minBrightness = 20, maxBrightness = 255;
 
 Tent::Tent()
     : sensorTimer { Timer(5000, &Tent::markNeedsSensorUpdate, *this) }
-    , minuteTimer { Timer(60000, &Tent::minutelyTick, *this) }
+    , minuteTimer { Timer(100, &Tent::minutelyTick, *this) }
     , displayDimTimer { Timer(120000, &Tent::displayLightLow, *this, true) }
     , displayOffTimer { Timer(300000, &Tent::displayLightOff, *this, true) }
 {
@@ -35,7 +35,7 @@ void Tent::setup()
 
     displayLightHigh();
 
-    // was there a grow in process before (re)booting?
+    // was there a grow/dry in process before (re)booting?
     if (state.getDayCount() > -1) {
         state.migrate();
 
@@ -393,17 +393,26 @@ void Tent::countMinute()
         }
 
     } else {
-        if (minutesInPeriod > nightDuration) { //night is over
-            state.setDayCount(state.getDayCount() + 1);
-            growLight("HIGH");
-            state.setIsDay(true);
-            state.setMinutesInPhotoperiod(0);
-            screenManager.markNeedsRedraw(DAY);
-
-        } else if (minutesInPeriod >= nightDuration - 10) { //night is ending
-            if (growLightStatus == "OFF") {
-                fadeGrowLight("SUNRISE", (10 - (nightDuration - minutesInPeriod)) * 10);
+        if(state.getMode() == 'g') {
+            if (minutesInPeriod > nightDuration) { //night is over (growing)
+                state.setDayCount(state.getDayCount() + 1);
+                growLight("HIGH");
+                state.setIsDay(true);
+                state.setMinutesInPhotoperiod(0);
+                screenManager.markNeedsRedraw(DAY);
+    
+            } else if (minutesInPeriod >= nightDuration - 10) { //night is ending
+                if (growLightStatus == "OFF") {
+                    fadeGrowLight("SUNRISE", (10 - (nightDuration - minutesInPeriod)) * 10);
+                }
             }
+        } else {
+            if (minutesInPeriod > nightDuration) { //night is over (drying)
+                state.setDayCount(state.getDayCount() + 1);
+                state.setMinutesInPhotoperiod(0);
+                screenManager.markNeedsRedraw(DAY);
+            }
+            
         }
     }
 

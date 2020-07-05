@@ -14,6 +14,10 @@ void TentState::begin()
     Particle.variable("dayDuration", eeprom.dayDuration);
 }
 
+char TentState::getMode() {
+    return eeprom.mode;
+}
+
 int TentState::getDayCount()
 {
     return eeprom.dayCounter;
@@ -37,6 +41,11 @@ int TentState::getDayDuration()
 void TentState::setDayDuration(int dayDuration)
 {
     eeprom.dayDuration = dayDuration;
+    save();
+}
+
+void TentState::setMode(char mode) {
+    eeprom.mode = mode;
     save();
 }
 
