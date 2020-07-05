@@ -20,16 +20,16 @@ void HomeScreen::render()
         tft.setTextColor(ILI9341_LIGHTGREY);
         tft.setTextSize(2);
 
-        tft.setCursor(126, 15);
+        tft.setCursor(126, 20);
         tft.print("Hi,");
 
-        tft.setCursor(85, 40);
-        tft.print("I'm Tomatotent.");
+        tft.setCursor(85, 45);
+        tft.print("I'm Tomatotent!");
 
         tft.drawBitmap(20, 20, tomato_filled_50, 50, 50, ILI9341_RED);
 
-        buttons.push_back(Button("startGrowBtn", 25, 100, 270, 38, "Start a Grow", 28, 8));
-        buttons.push_back(Button("startDryingBtn", 25, 170, 270, 38, "Dry a Harvest", 18, 8));
+        buttons.push_back(Button("startGrowBtn", 25, 110, 270, 38, "Start a Grow", 28, 8));
+        buttons.push_back(Button("startDryingBtn", 25, 180, 270, 38, "Dry a Harvest", 18, 8));
         
 
     } else { // a grow/dry is in progress
@@ -53,14 +53,16 @@ void HomeScreen::render()
                 buttons.push_back(Button("timerBtn", 10, 10, 115, 30, "", 18, 8));
                 buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
                 buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8));
-                break;
+            break;
             case 'd':
                 tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
                 tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_WHITE);
                 tft.drawBitmap(20,4,dry_36,36,36, ILI9341_YELLOW);
-                tft.setCursor(65, 14);
-                tft.setTextColor(ILI9341_YELLOW);
+                tft.drawBitmap(250,150,about_36,36,36, ILI9341_WHITE);
+
                 tft.setTextSize(2);
+                tft.setTextColor(ILI9341_YELLOW);
+                tft.setCursor(65, 14);
                 tft.print("Drying");
         
                 drawDayCounter();
@@ -69,9 +71,9 @@ void HomeScreen::render()
                 drawFanStatus();
         
                 buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
-                buttons.push_back(Button("timerBtn", 10, 10, 115, 30, "", 18, 8));
                 buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
-                buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8));                break;
+                buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8)); 
+            break;
         }      
         
     }
