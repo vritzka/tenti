@@ -428,47 +428,102 @@ void Tent::adjustFan()
     } else {
 
         float fanSpeedPercent = FAN_SPEED_MIN;
-        int step = 3;
+        int step;
 
-        if (!state.isDay())
-            step = 1;
-
-        if (sensors.tentTemperatureF > 70) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 73) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 76) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 79) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 82) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 85) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 88) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 91) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 94) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 97) {
-            fanSpeedPercent += step;
-        }
-        if (sensors.tentTemperatureF > 100) {
-            fanSpeedPercent += 15;
-        }
-
-        if (sensors.tentHumidity > 60 && fanSpeedPercent < 15)
-            fanSpeedPercent = 15;
+        switch (state.getMode())
+            {
+                case 'g':
+                        
+                    if (state.isDay()) {
+                        step = 3; 
+                    } else {
+                        step = 1;
+                    }
+                
+                    if (sensors.tentTemperatureF > 70) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 73) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 76) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 79) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 82) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 85) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 88) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 91) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 94) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 97) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 100) {
+                        fanSpeedPercent += 15;
+                    }
+                
+                    if (sensors.tentHumidity > 60 && fanSpeedPercent < 15)
+                        fanSpeedPercent = 15;
+                            
+                break;
+                case 'd':
+                    
+                    step = 1;
+                        
+                    if (sensors.tentTemperatureF > 70) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 73) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 76) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 79) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentTemperatureF > 82) {
+                        fanSpeedPercent += step;
+                    }
+                    
+                    if (sensors.tentHumidity > 68) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentHumidity > 70) {
+                        fanSpeedPercent += step;
+                    }                    
+                    if (sensors.tentHumidity > 72) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentHumidity > 74) {
+                        fanSpeedPercent += step;
+                    } 
+                    if (sensors.tentHumidity > 76) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentHumidity > 78) {
+                        fanSpeedPercent += step;
+                    }  
+                    if (sensors.tentHumidity > 80) {
+                        fanSpeedPercent += step;
+                    }
+                    if (sensors.tentHumidity > 82) {
+                        fanSpeedPercent += step;
+                    }  
+                    break;
+                }              
 
         //sensor fail
         if (sensors.tentTemperatureF > 200 || sensors.tentHumidity > 200)
