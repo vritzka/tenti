@@ -56,5 +56,6 @@ public:
     void fanScreen();
     void firmwareUpdateScreen();
     void tempUnitScreen();
+    void dryingHintScreen();
 };
 #endif

@@ -9,6 +9,7 @@
 #include "screens/grow_started.h"
 #include "screens/wifi_splash.h"
 #include "screens/wifi.h"
+#include "screens/drying_hint.h"
 
 extern Tent tent;
 
@@ -107,6 +108,12 @@ void ScreenManager::firmwareUpdateScreen()
 void ScreenManager::tempUnitScreen()
 {
     current.reset(new TempUnitScreen());
+    render();
+}
+
+void ScreenManager::dryingHintScreen()
+{
+    current.reset(new DryingHintScreen());
     render();
 }
 

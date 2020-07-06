@@ -38,8 +38,10 @@ void HomeScreen::render()
         {
             case 'g':
                 tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
-                tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_WHITE);
-        
+                tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_LIGHTGREY);
+                tft.drawBitmap(32, 72, temperature_30, 30, 30, ILI9341_WHITE);
+                tft.drawBitmap(40, 116, hygrometer_30, 30, 30, ILI9341_WHITE);
+                
                 drawDayCounter();
                 drawTemperature();
                 drawHumidity();
@@ -56,13 +58,15 @@ void HomeScreen::render()
             break;
             case 'd':
                 tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
-                tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_WHITE);
-                tft.drawBitmap(20,4,dry_36,36,36, ILI9341_YELLOW);
-                tft.drawBitmap(250,150,about_36,36,36, ILI9341_WHITE);
+                tft.drawBitmap(165, 4, fan_36, 36, 36, ILI9341_LIGHTGREY);
+                tft.drawBitmap(32, 72, temperature_30, 30, 30, ILI9341_WHITE);
+                tft.drawBitmap(40, 116, hygrometer_30, 30, 30, ILI9341_WHITE);
+                tft.drawBitmap(17,4,wind_36,36,36, ILI9341_YELLOW);
+                tft.drawBitmap(250,150,about_36,36,36, ILI9341_DARKGREY);
 
                 tft.setTextSize(2);
                 tft.setTextColor(ILI9341_YELLOW);
-                tft.setCursor(65, 14);
+                tft.setCursor(62, 14);
                 tft.print("Drying");
         
                 drawDayCounter();
@@ -72,7 +76,9 @@ void HomeScreen::render()
         
                 buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
                 buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
-                buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8)); 
+                buttons.push_back(Button("tempBtn", 50, 70, 165, 32, "", 18, 8)); 
+                buttons.push_back(Button("dryingHintbtn", 250, 150, 36, 36, "", 18, 8)); 
+                
             break;
         }      
         
@@ -115,9 +121,9 @@ void HomeScreen::update()
 
 void HomeScreen::drawTemperature()
 {
-    tft.fillRect(50, 70, 141, 25, ILI9341_BLACK);
-    tft.setCursor(50, 70);
-    tft.setTextColor(ILI9341_GREEN);
+    tft.fillRect(86, 75, 141, 25, ILI9341_BLACK);
+    tft.setCursor(86, 75);
+    tft.setTextColor(ILI9341_WHITE);
 
     if (tent.sensors.tentHumidity < 0) {
         tft.setTextSize(3);
@@ -137,9 +143,9 @@ void HomeScreen::drawTemperature()
 
 void HomeScreen::drawHumidity()
 {
-    tft.fillRect(50, 120, 141, 25, ILI9341_BLACK);
-    tft.setCursor(50, 120);
-    tft.setTextColor(ILI9341_PINK);
+    tft.fillRect(86, 122, 141, 25, ILI9341_BLACK);
+    tft.setCursor(86, 122);
+    tft.setTextColor(ILI9341_WHITE);
 
     if (tent.sensors.tentHumidity < 0) {
         tft.setTextSize(3);
@@ -267,7 +273,7 @@ void HomeScreen::drawDayCounter()
     tft.fillRect(130, 180, 80, 25, ILI9341_BLACK);
 
     tft.setCursor(70, 180);
-    tft.setTextColor(ILI9341_WHITE);
+    tft.setTextColor(ILI9341_CYAN);
     tft.setTextSize(3);
 
     tft.print("Day " + String(tent.state.getDayCount()));
@@ -302,10 +308,10 @@ void HomeScreen::renderButtonPressed(Button& btn)
     uint16_t x0 = btn.x0, y0 = btn.y0, w = btn.w, h = btn.h;
 
     if (btn.getName() == "startGrowBtn") {
-        tft.drawRect(x0, y0, w, h, ILI9341_RED);
+        tft.drawRect(x0, y0, w, h, ILI9341_LIGHTGREY);
     }
     if (btn.getName() == "startDryingBtn") {
-        tft.drawRect(x0, y0, w, h, ILI9341_RED);
+        tft.drawRect(x0, y0, w, h, ILI9341_LIGHTGREY);
     }
 }
 
@@ -328,9 +334,7 @@ void HomeScreen::handleButton(Button& btn)
         tent.state.setDayDuration(0);
         tent.state.setDayCount(1);
 
-        //screenManager.dryingStartedScreen();
-
-        delay(600);
+        delay(400);
 
         screenManager.homeScreen();
         tent.start();
@@ -349,5 +353,8 @@ void HomeScreen::handleButton(Button& btn)
 
     } else if (btn.getName() == "tempBtn") {
         screenManager.tempUnitScreen();
+        
+    } else if (btn.getName() == "dryingHintbtn") {
+        screenManager.dryingHintScreen();
     }
 }

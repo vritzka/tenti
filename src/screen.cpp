@@ -77,13 +77,14 @@ void Screen::drawFanStatus()
 
     tft.setCursor(210, 10);
     tft.setTextSize(2);
-    tft.setTextColor(ILI9341_WHITE);
+    tft.setTextColor(ILI9341_LIGHTGREY);
 
     tft.print(String(String::format("%.0f", tent.state.getFanSpeed())));
 
     tft.print("%");
 
     tft.setTextSize(1);
+    tft.setTextColor(ILI9341_DARKGREY);
     if (tent.state.getFanAutoMode()) {
         tft.setCursor(200, 30);
         tft.print("automatic");
