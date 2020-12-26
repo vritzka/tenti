@@ -1,3 +1,3 @@
-# Grow Box Controller with Fan.
+# Smart Grow Box Controller with Intelligent Fan.
 
 
