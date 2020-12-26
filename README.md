@@ -1,3 +1,3 @@
-# Tomatotent Mini Grow Box.
+# Grow Box Controller with Fan.
 
-Small, intelligent, super discreet Home Grow Box. 
+
