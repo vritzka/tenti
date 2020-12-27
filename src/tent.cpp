@@ -433,6 +433,17 @@ void Tent::adjustFan()
         switch (state.getMode())
             {
                 case 'g':
+                
+                /*THis should work like this:
+                
+                User can set min and max speed setting
+                User can also set preferred temperature
+                
+                If temp in tent is 5 deg celsius higher than chosen, fan goes to max fan speed setting
+                If temp in tent is 2.5 deg celsius higher than chosen, fan goes to 75% of max fan speed setting, etc
+                If temp in tent is lower than chosen, fan goes to low speed setting
+                
+                */
                         
                     if (state.isDay()) {
                         step = 3; 

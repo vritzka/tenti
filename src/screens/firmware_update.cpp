@@ -8,10 +8,8 @@ void FirmwareUpdateScreen::render()
     tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(2);
 
-    tft.setCursor(50, 30);
+    tft.setCursor(40, 50);
     tft.print("Firmware Updating...");
-    tft.setCursor(60, 90);
-    tft.print("Please wait");
 
     tft.drawBitmap(124, 160, plant_filled_72x72, 72, 72, ILI9341_WHITE);
 }
