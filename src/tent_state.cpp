@@ -111,6 +111,48 @@ void TentState::setFanSpeed(float fanSpeed)
     save();
 }
 
+float TentState::getFanSpeedMin()
+{
+    return eeprom.fanSpeedMin;
+}
+
+void TentState::setFanSpeedMin(float fanSpeedMin)
+{
+    eeprom.fanSpeedMin = fanSpeedMin;
+}
+
+float TentState::getFanSpeedMax()
+{
+    return eeprom.fanSpeedMax;
+}
+
+void TentState::setFanSpeedMax(float fanSpeedMax)
+{
+    eeprom.fanSpeedMax = fanSpeedMax;
+}
+
+float TentState::getGoalTemperature()
+{
+    return eeprom.goalTemperature;
+}
+
+void TentState::setGoalTmperature(float goalTemperature)
+{
+    eeprom.goalTemperature = goalTemperature;
+    save();
+}
+
+float TentState::getGoalHumidity()
+{
+    return eeprom.goalHumidity;
+}
+
+void TentState::setGoalHumidity(float goalHumidity)
+{
+    eeprom.goalHumidity = goalHumidity;
+    save();
+}
+
 void TentState::save()
 {
     EEPROM.put(0, eeprom);

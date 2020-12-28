@@ -16,6 +16,10 @@ class TentState {
         float fanSpeed; // 0-100%
         char tempUnit; // F or C
         bool wifiStatus; // 1=on, 0=off
+        float goalTemperature;
+        float goalHumidity;
+        float fanSpeedMin;
+        float fanSpeedMax;
     } eeprom;
 
 public:
@@ -32,14 +36,32 @@ public:
         eeprom.fanSpeed = 30;
         eeprom.tempUnit = 'F';
         eeprom.wifiStatus = 1;
+        eeprom.goalTemperature = 77.0;
+        eeprom.goalHumidity = 50.0;
+        eeprom.fanSpeedMin = 15;
+        eeprom.fanSpeedMax = 40;
         save();
     }
     void migrate()
     {
-        //for updates from earlier version that don't have temp units
+        //updating earlier versions
         if (getTempUnit() != 'F' && getTempUnit() != 'C') {
             setTempUnit('F');
+            
+        } else if(isnan(getFanSpeedMin())) {
+            setFanSpeedMin(15);
+            
+        } else if(isnan(getFanSpeedMax())) {
+            setFanSpeedMax(40);
+            
+        } else if(isnan(getGoalTemperature())) {
+            setGoalTmperature(77.0);
+            
+        } else if(isnan(getGoalHumidity())) {
+            setGoalHumidity(50.0);
+            
         }
+        
     }
     void begin();
     void save();
@@ -62,12 +84,25 @@ public:
     bool getFanAutoMode(void);
     void setFanAutoMode(bool);
 
-    float getFanSpeed();
+    float getFanSpeed(void);
     void setFanSpeed(float);
-
+    
+    float getFanSpeedMin(void);
+    void setFanSpeedMin(float);
+    
+    float getFanSpeedMax(void);
+    void setFanSpeedMax(float);
+ 
     char getTempUnit(void);
     void setTempUnit(char);
     
     bool getWifiStatus(void);
     void setWifiStatus(bool);
+    
+    float getGoalTemperature(void);
+    void setGoalTmperature(float);
+    
+    float getGoalHumidity(void);
+    void setGoalHumidity(float);
+    
 };
