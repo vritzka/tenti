@@ -106,10 +106,9 @@ void registration_handler(system_event_t event, int status)
         http_response_t response;
         
         http_header_t headers[] = {
-            //  { "Content-Type", "application/json" },
-            //  { "Accept" , "application/json" },
-            { "Accept" , "*/*"},
-            { NULL, NULL } // NOTE: Always terminate headers will NULL
+            { "Content-Type", "application/json" },
+            { "Accept" , "application/json" },
+            { NULL, NULL } 
         };
         
         request.port = 80;

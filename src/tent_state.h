@@ -60,6 +60,8 @@ public:
         } else if(isnan(getGoalHumidity())) {
             setGoalHumidity(50.0);
             
+        } else if(getMode() != 'g' && getMode() != 'd') {
+            setMode('g'); 
         }
         
     }

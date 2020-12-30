@@ -11,6 +11,8 @@ public:
     void renderButton(Button& btn);
     void renderButtonPressed(Button& btn);
     void handleButton(Button& btn);
-    void renderFanMinMax(void);
+    void drawFanSpeedSettings(void);
+    void drawFanSpeedMin(void);
+    void drawFanSpeedMax(void);
 };
 #endif
