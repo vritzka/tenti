@@ -169,6 +169,7 @@ void FanScreen::handleButton(Button& btn)
         if(fanSpeedMin == fanSpeedMax)
             return;
         tent.state.setFanSpeedMin(fanSpeedMin);
+        tent.adjustFan();
         screenManager.markNeedsRedraw(FAN_SPEED_MIN_SETTING);
 
     } else if (btn.getName() == "fanMinDownBtn") {
@@ -178,6 +179,7 @@ void FanScreen::handleButton(Button& btn)
         if(fanSpeedMin == 0)
             return;
         tent.state.setFanSpeedMin(fanSpeedMin);
+        tent.adjustFan();
         screenManager.markNeedsRedraw(FAN_SPEED_MIN_SETTING);
         
     } else if (btn.getName() == "fanMaxUpBtn") {
@@ -187,6 +189,7 @@ void FanScreen::handleButton(Button& btn)
         if(fanSpeedMax == 105)
             return;
         tent.state.setFanSpeedMax(fanSpeedMax);
+        tent.adjustFan();
         screenManager.markNeedsRedraw(FAN_SPEED_MAX_SETTING);
         
     } else if (btn.getName() == "fanMaxDownBtn") {
@@ -197,6 +200,7 @@ void FanScreen::handleButton(Button& btn)
         if(fanSpeedMax == fanSpeedMin)
             return;
         tent.state.setFanSpeedMax(fanSpeedMax);
+        tent.adjustFan();
         screenManager.markNeedsRedraw(FAN_SPEED_MAX_SETTING);
         
     } else if (btn.getName() == "fanOkBtn") {
