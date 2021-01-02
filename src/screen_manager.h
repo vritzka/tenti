@@ -58,7 +58,7 @@ public:
     void wifiSplashScreen();
     void fanScreen();
     void firmwareUpdateScreen();
-    void tempUnitScreen();
+    void climateScreen();
     void dryingHintScreen();
 };
 #endif

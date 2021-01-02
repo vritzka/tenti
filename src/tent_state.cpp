@@ -14,7 +14,8 @@ void TentState::begin()
     Particle.variable("dayDuration", eeprom.dayDuration);
 }
 
-char TentState::getMode() {
+char TentState::getMode()
+{
     return eeprom.mode;
 }
 
@@ -44,7 +45,8 @@ void TentState::setDayDuration(int dayDuration)
     save();
 }
 
-void TentState::setMode(char mode) {
+void TentState::setMode(char mode)
+{
     eeprom.mode = mode;
     save();
 }
@@ -131,25 +133,25 @@ void TentState::setFanSpeedMax(float fanSpeedMax)
     eeprom.fanSpeedMax = fanSpeedMax;
 }
 
-float TentState::getGoalTemperature()
+float TentState::getTargetTemperature()
 {
-    return eeprom.goalTemperature;
+    return eeprom.targetTemperature;
 }
 
-void TentState::setGoalTmperature(float goalTemperature)
+void TentState::setTargetTemperature(float targetTemperature)
 {
-    eeprom.goalTemperature = goalTemperature;
+    eeprom.targetTemperature = targetTemperature;
     save();
 }
 
-float TentState::getGoalHumidity()
+float TentState::getTargetHumidity()
 {
-    return eeprom.goalHumidity;
+    return eeprom.targetHumidity;
 }
 
-void TentState::setGoalHumidity(float goalHumidity)
+void TentState::setTargetHumidity(float targetHumidity)
 {
-    eeprom.goalHumidity = goalHumidity;
+    eeprom.targetHumidity = targetHumidity;
     save();
 }
 

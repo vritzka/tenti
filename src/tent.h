@@ -74,6 +74,8 @@ public:
     void checkSensors();
     void checkTent();
     void checkSoil();
+    
+    float convertFtoC(float tempF);
 
     void fan(String fanStatus);
     int growLight(String brightness);

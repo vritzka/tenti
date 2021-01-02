@@ -21,7 +21,7 @@ public:
     void renderButtons(bool forced = false);
     void processTouch(int x, int y);
 
-//virtual:
+    //virtual:
     virtual String getName() = 0;
     virtual void render() = 0;
     virtual void update();

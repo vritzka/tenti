@@ -36,7 +36,7 @@ void WifiScreen::render()
     tft.setTextSize(1);
     if (WiFi.ready())
         tft.print(String::format("Connected: %s (%d%%)", WiFi.SSID(), (int)WiFi.RSSI().getStrength()));
-    else if(WiFi.connecting())
+    else if (WiFi.connecting())
         tft.print("Connecting ...");
     else
         tft.print("Disconnected");

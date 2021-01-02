@@ -5,7 +5,7 @@
 #include "screens/timer.h"
 #include "screens/fan.h"
 #include "screens/firmware_update.h"
-#include "screens/temp_unit.h"
+#include "screens/climate.h"
 #include "screens/grow_started.h"
 #include "screens/wifi_splash.h"
 #include "screens/wifi.h"
@@ -33,7 +33,7 @@ void ScreenManager::tick()
         }
 
         TS_Point p = ts.getPosition();
-        p.x += 20; // calibration
+        p.x += 10; // calibration
         current->processTouch(p.x, p.y);
         delay(10);
 
@@ -105,9 +105,9 @@ void ScreenManager::firmwareUpdateScreen()
     render();
 }
 
-void ScreenManager::tempUnitScreen()
+void ScreenManager::climateScreen()
 {
-    current.reset(new TempUnitScreen());
+    current.reset(new ClimateScreen());
     render();
 }
 

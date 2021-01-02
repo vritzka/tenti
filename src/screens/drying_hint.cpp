@@ -24,7 +24,7 @@ void DryingHintScreen::render()
 {
     tft.fillScreen(ILI9341_PURPLE);
 
-    tft.drawBitmap(20,4,wind_36,36,36, ILI9341_YELLOW);
+    tft.drawBitmap(20, 4, wind_36, 36, 36, ILI9341_YELLOW);
 
     tft.setCursor(65, 16);
     tft.setTextColor(ILI9341_YELLOW);
@@ -33,7 +33,7 @@ void DryingHintScreen::render()
 
     tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(1);
-    
+
     tft.setCursor(10, 50);
     tft.print("Slow drying will make a good product.");
     tft.setCursor(10, 60);
@@ -54,8 +54,6 @@ void DryingHintScreen::render()
     tft.print("drying takes between 3-8 days.");
     tft.setCursor(10, 180);
     tft.print("Then its time for curing.");
-    
-    
 
     int x, y, xOffset = 230, yOffset = 140;
     tft.setTextSize(1);

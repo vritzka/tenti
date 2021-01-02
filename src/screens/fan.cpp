@@ -23,7 +23,7 @@ void FanScreen::render()
 
     drawFanSpeedSettings();
 
-    renderButtons(true); 
+    renderButtons(true);
     drawFanStatus();
 }
 
@@ -31,15 +31,15 @@ void FanScreen::update()
 {
     if (screenManager.wasNeedsRedraw(FAN))
         drawFanStatus();
-        
+
     if (screenManager.wasNeedsRedraw(FAN_SPEED_MIN_SETTING))
         drawFanSpeedMin();
 
     if (screenManager.wasNeedsRedraw(FAN_SPEED_MAX_SETTING))
         drawFanSpeedMax();
-        
+
     if (screenManager.wasNeedsRedraw(FAN_SPEED_SETTINGS))
-        drawFanSpeedSettings();        
+        drawFanSpeedSettings();
 
     Screen::update();
 }
@@ -53,31 +53,30 @@ void FanScreen::renderButton(Button& btn)
         drawButton(btn, !tent.state.getFanAutoMode() ? ILI9341_OLIVE : ILI9341_BLACK, 2);
 
     } else if (btn.getName() == "fanUpBtn") {
-        if(tent.state.getFanAutoMode())
+        if (tent.state.getFanAutoMode())
             return;
         drawButtonTriangleUp(btn, ILI9341_RED);
 
     } else if (btn.getName() == "fanDownBtn") {
-        if(tent.state.getFanAutoMode())
+        if (tent.state.getFanAutoMode())
             return;
         drawButtonTriangleDown(btn, ILI9341_RED);
 
     } else if (btn.getName() == "fanOkBtn") {
         drawButton(btn, ILI9341_OLIVE, 3);
-        
+
     } else if (btn.getName() == "fanMinUpBtn") {
         drawButtonTriangleUp(btn, ILI9341_RED);
 
-    } else if(btn.getName() == "fanMinDownBtn") {
+    } else if (btn.getName() == "fanMinDownBtn") {
         drawButtonTriangleDown(btn, ILI9341_RED);
-        
+
     } else if (btn.getName() == "fanMaxUpBtn") {
         drawButtonTriangleUp(btn, ILI9341_RED);
 
-    } else if(btn.getName() == "fanMaxDownBtn") {
+    } else if (btn.getName() == "fanMaxDownBtn") {
         drawButtonTriangleDown(btn, ILI9341_RED);
     }
-    
 }
 
 void FanScreen::renderButtonPressed(Button& btn)
@@ -87,51 +86,45 @@ void FanScreen::renderButtonPressed(Button& btn)
 
     } else if (btn.getName() == "fanDownBtn") {
         drawButtonTriangleDown(btn, ILI9341_WHITE);
-        
+
     } else if (btn.getName() == "fanMinUpBtn") {
         drawButtonTriangleUp(btn, ILI9341_WHITE);
-        
+
     } else if (btn.getName() == "fanMinDownBtn") {
         drawButtonTriangleDown(btn, ILI9341_WHITE);
 
     } else if (btn.getName() == "fanMaxUpBtn") {
         drawButtonTriangleUp(btn, ILI9341_WHITE);
-        
+
     } else if (btn.getName() == "fanMaxDownBtn") {
         drawButtonTriangleDown(btn, ILI9341_WHITE);
-
     }
 }
 
 void FanScreen::handleButton(Button& btn)
 {
     if (btn.getName() == "fanAutoBtn") {
-        
-        if(tent.state.getFanAutoMode())
-            return;
-            
-        tent.state.setFanAutoMode(true);
-        
-        buttons.pop_back();
-        buttons.pop_back();
-        
-        screenManager.markNeedsRedraw(FAN_SPEED_SETTINGS);
 
+        if (tent.state.getFanAutoMode())
+            return;
+
+        tent.state.setFanAutoMode(true);
+        buttons.pop_back();
+        buttons.pop_back();
+        screenManager.markNeedsRedraw(FAN_SPEED_SETTINGS);
         tent.adjustFan();
         screenManager.markNeedsRedraw(FAN);
 
     } else if (btn.getName() == "fanManualBtn") {
-        if(!tent.state.getFanAutoMode())
+        if (!tent.state.getFanAutoMode())
             return;
+
         tent.state.setFanAutoMode(false);
-        
         buttons.pop_back();
         buttons.pop_back();
         buttons.pop_back();
         buttons.pop_back();
-        
         screenManager.markNeedsRedraw(FAN_SPEED_SETTINGS);
-        
         tent.adjustFan();
         screenManager.markNeedsRedraw(FAN);
 
@@ -147,7 +140,6 @@ void FanScreen::handleButton(Button& btn)
             tent.adjustFan();
             screenManager.markNeedsRedraw(FAN);
         }
-
     } else if (btn.getName() == "fanDownBtn") {
         float fanSpeedPercent = tent.state.getFanSpeed();
         tent.state.setFanAutoMode(false);
@@ -160,13 +152,12 @@ void FanScreen::handleButton(Button& btn)
             tent.adjustFan();
             screenManager.markNeedsRedraw(FAN);
         }
-
     } else if (btn.getName() == "fanMinUpBtn") {
         float fanSpeedMin = tent.state.getFanSpeedMin();
         float fanSpeedMax = tent.state.getFanSpeedMax();
         fanSpeedMin += 5;
 
-        if(fanSpeedMin == fanSpeedMax)
+        if (fanSpeedMin == fanSpeedMax)
             return;
         tent.state.setFanSpeedMin(fanSpeedMin);
         tent.adjustFan();
@@ -175,102 +166,100 @@ void FanScreen::handleButton(Button& btn)
     } else if (btn.getName() == "fanMinDownBtn") {
         float fanSpeedMin = tent.state.getFanSpeedMin();
         fanSpeedMin -= 5;
-        
-        if(fanSpeedMin == 0)
+
+        if (fanSpeedMin == 0)
             return;
         tent.state.setFanSpeedMin(fanSpeedMin);
         tent.adjustFan();
         screenManager.markNeedsRedraw(FAN_SPEED_MIN_SETTING);
-        
+
     } else if (btn.getName() == "fanMaxUpBtn") {
         float fanSpeedMax = tent.state.getFanSpeedMax();
         fanSpeedMax += 5;
 
-        if(fanSpeedMax == 105)
+        if (fanSpeedMax == 105)
             return;
         tent.state.setFanSpeedMax(fanSpeedMax);
         tent.adjustFan();
         screenManager.markNeedsRedraw(FAN_SPEED_MAX_SETTING);
-        
+
     } else if (btn.getName() == "fanMaxDownBtn") {
         float fanSpeedMin = tent.state.getFanSpeedMin();
         float fanSpeedMax = tent.state.getFanSpeedMax();
         fanSpeedMax -= 5;
-        
-        if(fanSpeedMax == fanSpeedMin)
+
+        if (fanSpeedMax == fanSpeedMin)
             return;
         tent.state.setFanSpeedMax(fanSpeedMax);
         tent.adjustFan();
         screenManager.markNeedsRedraw(FAN_SPEED_MAX_SETTING);
-        
+
     } else if (btn.getName() == "fanOkBtn") {
         screenManager.homeScreen();
-        
     }
 }
 
-void FanScreen::drawFanSpeedSettings(void) 
+void FanScreen::drawFanSpeedSettings(void)
 {
-        if(tent.state.getFanAutoMode()) {
-            tft.fillRect(225,75,51,122,ILI9341_BLACK);
-            tft.setTextColor(ILI9341_WHITE);
-            
-            tft.setCursor(229,67);
-            tft.setTextSize(1);
-            tft.print("Min Speed");
-            drawFanSpeedMin();
-    
-            tft.setCursor(229,142);
-            tft.setTextSize(1);
-            tft.println("Max Speed");
-            drawFanSpeedMax();
-            
-            buttons.push_back(Button("fanMinUpBtn", 280, 85, 30, 30, "", 0, 0));
-            buttons.push_back(Button("fanMinDownBtn", 200, 85, 30, 30, "", 0, 0));
-            buttons.push_back(Button("fanMaxUpBtn", 280, 160, 30, 30, "", 0, 0));
-            buttons.push_back(Button("fanMaxDownBtn", 200, 160, 30, 30, "", 0, 0));
-            renderButton(buttons[0]);
-            renderButton(buttons[1]);
-            renderButton(buttons[3]);
-            renderButton(buttons[4]);
-            renderButton(buttons[5]);
-            renderButton(buttons[6]);            
-        } else {
-            tft.fillRect(195,60,120,142,ILI9341_BLACK);
-            buttons.push_back(Button("fanUpBtn", 225, 75, 50, 50, "", 0, 0));
-            buttons.push_back(Button("fanDownBtn", 225, 145, 50, 50, "", 0, 0));
-            renderButton(buttons[0]);
-            renderButton(buttons[1]);
-            renderButton(buttons[3]);
-            renderButton(buttons[4]);         
-            
-        }
+    if (tent.state.getFanAutoMode()) {
+        tft.fillRect(225, 75, 51, 122, ILI9341_BLACK);
+        tft.setTextColor(ILI9341_WHITE);
+
+        tft.setCursor(229, 67);
+        tft.setTextSize(1);
+        tft.print("Min Speed");
+        drawFanSpeedMin();
+
+        tft.setCursor(229, 142);
+        tft.setTextSize(1);
+        tft.println("Max Speed");
+        drawFanSpeedMax();
+
+        buttons.push_back(Button("fanMinUpBtn", 280, 85, 30, 30, "", 0, 0));
+        buttons.push_back(Button("fanMinDownBtn", 200, 85, 30, 30, "", 0, 0));
+        buttons.push_back(Button("fanMaxUpBtn", 280, 160, 30, 30, "", 0, 0));
+        buttons.push_back(Button("fanMaxDownBtn", 200, 160, 30, 30, "", 0, 0));
+        renderButton(buttons[0]);
+        renderButton(buttons[1]);
+        renderButton(buttons[3]);
+        renderButton(buttons[4]);
+        renderButton(buttons[5]);
+        renderButton(buttons[6]);
+    } else {
+        tft.fillRect(195, 60, 120, 142, ILI9341_BLACK);
+        buttons.push_back(Button("fanUpBtn", 225, 75, 50, 50, "", 0, 0));
+        buttons.push_back(Button("fanDownBtn", 225, 145, 50, 50, "", 0, 0));
+        renderButton(buttons[0]);
+        renderButton(buttons[1]);
+        renderButton(buttons[3]);
+        renderButton(buttons[4]);
+    }
 }
 
 void FanScreen::drawFanSpeedMin()
 {
-        tft.fillRect(237,92,35,15,ILI9341_BLACK);
-        float fanSpeedMin = tent.state.getFanSpeedMin();
-        tft.setTextColor(ILI9341_WHITE);
-        if(fanSpeedMin == 5) {
-            tft.setCursor(245,92);
-        } else {
-            tft.setCursor(238,92);
-        }
-        tft.setTextSize(2);
-        tft.print(String::format("%.0f", fanSpeedMin) + "%");
+    tft.fillRect(237, 92, 35, 15, ILI9341_BLACK);
+    float fanSpeedMin = tent.state.getFanSpeedMin();
+    tft.setTextColor(ILI9341_WHITE);
+    if (fanSpeedMin == 5) {
+        tft.setCursor(245, 92);
+    } else {
+        tft.setCursor(238, 92);
+    }
+    tft.setTextSize(2);
+    tft.print(String::format("%.0f", fanSpeedMin) + "%");
 }
 
 void FanScreen::drawFanSpeedMax()
 {
-        tft.fillRect(232,167,47,15,ILI9341_BLACK);
-        float fanSpeedMax = tent.state.getFanSpeedMax();
-        tft.setTextColor(ILI9341_WHITE);
-        if(fanSpeedMax == 100) {
-            tft.setCursor(232,167);
-        } else {
-            tft.setCursor(238,167);
-        }
-        tft.setTextSize(2);
-        tft.print(String::format("%.0f", fanSpeedMax) + "%");
+    tft.fillRect(232, 167, 47, 15, ILI9341_BLACK);
+    float fanSpeedMax = tent.state.getFanSpeedMax();
+    tft.setTextColor(ILI9341_WHITE);
+    if (fanSpeedMax == 100) {
+        tft.setCursor(232, 167);
+    } else {
+        tft.setCursor(238, 167);
+    }
+    tft.setTextSize(2);
+    tft.print(String::format("%.0f", fanSpeedMax) + "%");
 }

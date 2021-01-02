@@ -50,8 +50,8 @@ void Tent::setup()
     }
 
     state.begin();
-    
-    if(state.getWifiStatus() && WiFi.hasCredentials())
+
+    if (state.getWifiStatus() && WiFi.hasCredentials())
         Particle.connect();
 }
 
@@ -393,14 +393,14 @@ void Tent::countMinute()
         }
 
     } else {
-        if(state.getMode() == 'g') {
+        if (state.getMode() == 'g') {
             if (minutesInPeriod > nightDuration) { //night is over (growing)
                 state.setDayCount(state.getDayCount() + 1);
                 growLight("HIGH");
                 state.setIsDay(true);
                 state.setMinutesInPhotoperiod(0);
                 screenManager.markNeedsRedraw(DAY);
-    
+
             } else if (minutesInPeriod >= nightDuration - 10) { //night is ending
                 if (growLightStatus == "OFF") {
                     fadeGrowLight("SUNRISE", (10 - (nightDuration - minutesInPeriod)) * 10);
@@ -412,7 +412,6 @@ void Tent::countMinute()
                 state.setMinutesInPhotoperiod(0);
                 screenManager.markNeedsRedraw(DAY);
             }
-            
         }
     }
 
@@ -426,36 +425,28 @@ void Tent::adjustFan()
         fan("ON");
 
     } else {
-
         float fanSpeedPercent;
-        
-        float tempF = sensors.tentTemperatureF;
         float fanSpeedMinSetting = state.getFanSpeedMin();
         float fanSpeedMaxSetting = state.getFanSpeedMax();
-        float goalTemperature = 86;
+        float goalTemperature = state.getTargetTemperature();
         float fan_react_zone_low = goalTemperature - 2;
         float fan_react_zone_high = goalTemperature + 5;
-        float fanSpeedStep = (fanSpeedMaxSetting - fanSpeedMinSetting)/7;
-        
-        if(tempF < fan_react_zone_low)
-        {
-            fanSpeedPercent = fanSpeedMinSetting;  
-            
-        } else if(tempF >= fan_react_zone_low)
-        {
-            float deviation = tempF - fan_react_zone_low;
-            fanSpeedPercent = ceil(fanSpeedMinSetting+(deviation*fanSpeedStep));
-            
-            if(fanSpeedPercent > fanSpeedMaxSetting) {
-                fanSpeedPercent = fanSpeedMaxSetting;   
+        float fanSpeedStep = (fanSpeedMaxSetting - fanSpeedMinSetting) / 7;
+
+        if (sensors.tentTemperatureF < fan_react_zone_low) {
+            fanSpeedPercent = fanSpeedMinSetting;
+
+        } else if (sensors.tentTemperatureF >= fan_react_zone_low) {
+            float deviation = sensors.tentTemperatureF - fan_react_zone_low;
+            fanSpeedPercent = ceil(fanSpeedMinSetting + (deviation * fanSpeedStep));
+            if (fanSpeedPercent > fanSpeedMaxSetting) {
+                fanSpeedPercent = fanSpeedMaxSetting;
             }
-            
         }
-        
 
         //sensor fail
-        //if (sensors.tentTemperatureF > 200 || sensors.tentHumidity > 200)
-            //fanSpeedPercent = 30;
+        if (sensors.tentTemperatureF > 200 || sensors.tentHumidity > 200)
+            fanSpeedPercent = fanSpeedMinSetting + 10;
 
         if (fanSpeedPercent != state.getFanSpeed()) {
             state.setFanSpeed(fanSpeedPercent);
@@ -463,4 +454,9 @@ void Tent::adjustFan()
             screenManager.markNeedsRedraw(FAN);
         }
     }
+}
+
+float Tent::convertFtoC(float tempF)
+{
+    return (tempF-32)*0.5556;
 }
