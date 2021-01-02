@@ -166,7 +166,7 @@ void ClimateScreen::drawTargetTemperature(bool warning)
         tft.print(String::format("%.1f", targetTemperature));
         tft.setTextSize(1);
         tft.print(tempUnit);
-        delay(90);
+        delay(50);
     }
     tft.setCursor(92, 93);
     tft.setTextSize(2);
@@ -193,7 +193,7 @@ void ClimateScreen::drawTargetHumidity(bool warning)
         tft.print(String::format("%.1f", targetHumidity));
         tft.setTextSize(1);
         tft.print("%");
-        delay(90);
+        delay(50);
     }
     tft.setTextColor(ILI9341_WHITE);
     if(targetHumidity < 10) {
