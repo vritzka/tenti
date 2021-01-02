@@ -109,6 +109,8 @@ void ClimateScreen::handleButton(Button& btn)
             tent.state.setTargetTemperature(targetTemperature);
             drawTargetTemperature();
             tent.adjustFan();
+        } else {
+            drawTargetTemperature(true);  
         }
         
     } else if(btn.getName() == "targetTempDownBtn") {
@@ -118,6 +120,8 @@ void ClimateScreen::handleButton(Button& btn)
             tent.state.setTargetTemperature(targetTemperature);
             drawTargetTemperature();
             tent.adjustFan();
+        } else {
+            drawTargetTemperature(true);  
         }
         
     } else if(btn.getName() == "targetHumUpBtn") {
@@ -127,6 +131,8 @@ void ClimateScreen::handleButton(Button& btn)
             tent.state.setTargetHumidity(targetHumidity);
             drawTargetHumidity();
             tent.adjustFan();
+        } else {
+            drawTargetHumidity(true);  
         }
         
     } else if(btn.getName() == "targetHumDownBtn") {
@@ -136,36 +142,65 @@ void ClimateScreen::handleButton(Button& btn)
             tent.state.setTargetHumidity(targetHumidity);
             drawTargetHumidity();
             tent.adjustFan();
+        } else {
+            drawTargetHumidity(true);  
         }
         
     }
 }
 
-void ClimateScreen::drawTargetTemperature()
+void ClimateScreen::drawTargetTemperature(bool warning)
 {
     tft.fillRect(92, 93, 57, 15, ILI9341_BLACK);
     float targetTemperature = tent.state.getTargetTemperature();
-    tft.setTextColor(ILI9341_WHITE);
     char tempUnit = tent.state.getTempUnit();
     
     if(tempUnit == 'C') {
         targetTemperature = tent.convertFtoC(targetTemperature);
     }
     
+    if(warning) {
+        tft.setCursor(92, 93);
+        tft.setTextSize(2);
+        tft.setTextColor(ILI9341_RED);
+        tft.print(String::format("%.1f", targetTemperature));
+        tft.setTextSize(1);
+        tft.print(tempUnit);
+        delay(90);
+    }
     tft.setCursor(92, 93);
     tft.setTextSize(2);
+    tft.setTextColor(ILI9341_WHITE);
     tft.print(String::format("%.1f", targetTemperature));
     tft.setTextSize(1);
     tft.print(tempUnit);
     
+    
 }
 
-void ClimateScreen::drawTargetHumidity()
+void ClimateScreen::drawTargetHumidity(bool warning)
 {
     tft.fillRect(92, 177, 57, 15, ILI9341_BLACK);
     float targetHumidity = tent.state.getTargetHumidity();
+    if(warning) {
+        tft.setTextColor(ILI9341_RED);
+        if(targetHumidity < 10) {
+            tft.setCursor(97, 177);
+        } else {
+            tft.setCursor(92, 177);
+        }
+        tft.setTextSize(2);
+        tft.print(String::format("%.1f", targetHumidity));
+        tft.setTextSize(1);
+        tft.print("%");
+        delay(90);
+    }
     tft.setTextColor(ILI9341_WHITE);
-    tft.setCursor(92, 177);
+    if(targetHumidity < 10) {
+        tft.setCursor(97, 177);
+    } else {
+        tft.setCursor(92, 177);
+    }
     tft.setTextSize(2);
     tft.print(String::format("%.1f", targetHumidity));
     tft.setTextSize(1);
