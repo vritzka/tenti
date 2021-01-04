@@ -445,7 +445,7 @@ void Tent::adjustFan()
         }
 
         //sensor fail
-        if (sensors.tentTemperatureF > 200 || sensors.tentHumidity > 200)
+        if (sensors.tentHumidity < 0)
             fanSpeedPercent = fanSpeedMinSetting + 10;
 
         if (fanSpeedPercent != state.getFanSpeed()) {
