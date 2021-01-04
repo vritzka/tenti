@@ -104,47 +104,54 @@ void ClimateScreen::handleButton(Button& btn)
         
     } else if(btn.getName() == "targetTempUpBtn") {
         float targetTemperature = tent.state.getTargetTemperature();
-        if(targetTemperature < 95) {
-            targetTemperature += 2;
-            tent.state.setTargetTemperature(targetTemperature);
-            drawTargetTemperature();
-            tent.adjustFan();
-        } else {
-            drawTargetTemperature(true);  
-        }
+        targetTemperature += 2;
+        
+        bool warning = (targetTemperature < 97) ? false : true;
+        drawTargetTemperature(warning);
+
+        if (warning)
+            return;
+
+        tent.state.setTargetTemperature(targetTemperature);
+        tent.adjustFan();
         
     } else if(btn.getName() == "targetTempDownBtn") {
         float targetTemperature = tent.state.getTargetTemperature();
-        if(targetTemperature > 49) {
-            targetTemperature -= 2;
-            tent.state.setTargetTemperature(targetTemperature);
-            drawTargetTemperature();
-            tent.adjustFan();
-        } else {
-            drawTargetTemperature(true);  
-        }
+        targetTemperature -= 2;
         
+        bool warning = (targetTemperature > 47) ? false : true;
+        drawTargetTemperature(warning);
+
+        if (warning)
+            return;
+
+        tent.state.setTargetTemperature(targetTemperature);
+        tent.adjustFan();
+
     } else if(btn.getName() == "targetHumUpBtn") {
         float targetHumidity = tent.state.getTargetHumidity();
-        if(targetHumidity < 95) {
-            targetHumidity += 5;
-            tent.state.setTargetHumidity(targetHumidity);
-            drawTargetHumidity();
-            tent.adjustFan();
-        } else {
-            drawTargetHumidity(true);  
-        }
+        targetHumidity += 5;
+        
+        bool warning = (targetHumidity < 100) ? false : true;
+        drawTargetHumidity(warning);
+        
+        if (warning)
+            return;
+        
+        tent.state.setTargetHumidity(targetHumidity);
+        tent.adjustFan();
         
     } else if(btn.getName() == "targetHumDownBtn") {
         float targetHumidity = tent.state.getTargetHumidity();
-        if(targetHumidity > 5) {
-            targetHumidity -= 5;
-            tent.state.setTargetHumidity(targetHumidity);
-            drawTargetHumidity();
-            tent.adjustFan();
-        } else {
-            drawTargetHumidity(true);  
-        }
+        targetHumidity -= 5;
+        bool warning = (targetHumidity > 0) ? false : true;
+        drawTargetHumidity(warning);
+        
+        if (warning)
+            return;
+        
+        tent.state.setTargetHumidity(targetHumidity);
+        tent.adjustFan();
         
     }
 }
@@ -166,7 +173,8 @@ void ClimateScreen::drawTargetTemperature(bool warning)
         tft.print(String::format("%.1f", targetTemperature));
         tft.setTextSize(1);
         tft.print(tempUnit);
-        delay(50);
+        unsigned long waitUntil = millis()+100;
+        while (waitUntil > millis()) { } 
     }
     tft.setCursor(92, 93);
     tft.setTextSize(2);
@@ -193,7 +201,8 @@ void ClimateScreen::drawTargetHumidity(bool warning)
         tft.print(String::format("%.1f", targetHumidity));
         tft.setTextSize(1);
         tft.print("%");
-        delay(50);
+        unsigned long waitUntil = millis()+100;
+        while (waitUntil > millis()) { } 
     }
     tft.setTextColor(ILI9341_WHITE);
     if(targetHumidity < 10) {

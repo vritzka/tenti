@@ -12,7 +12,7 @@ public:
     void renderButtonPressed(Button& btn);
     void handleButton(Button& btn);
     void drawFanSpeedSettings(void);
-    void drawFanSpeedMin(void);
-    void drawFanSpeedMax(void);
+    void drawFanSpeedMin(bool warning=0);
+    void drawFanSpeedMax(bool warning=0);
 };
 #endif
