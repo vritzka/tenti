@@ -88,25 +88,55 @@ void ClimateScreen::renderButtonPressed(Button& btn)
 void ClimateScreen::handleButton(Button& btn)
 {
     if (btn.getName() == "climateUnitFBtn") {
+        char tempUnit = tent.state.getTempUnit();
+        if(tempUnit == 'F')
+            return;
+        
+        float targetTemperature = tent.state.getTargetTemperature();
+        targetTemperature = round(tent.convertCtoF(targetTemperature));
+        tent.state.setTargetTemperature(targetTemperature);
+        
         tent.state.setTempUnit('F');
+        drawTargetTemperature();
+        
+        
         renderButton(buttons[4]);
         renderButton(buttons[5]);
-        drawTargetTemperature();
 
     } else if (btn.getName() == "climateUnitCBtn") {
+        char tempUnit = tent.state.getTempUnit();
+        if(tempUnit == 'C')
+            return;
+        
+        float targetTemperature = tent.state.getTargetTemperature();
+        targetTemperature = round(tent.convertFtoC(targetTemperature));
+        tent.state.setTargetTemperature(targetTemperature);
+        
         tent.state.setTempUnit('C');
+        drawTargetTemperature();
+        
         renderButton(buttons[4]);
         renderButton(buttons[5]);
-        drawTargetTemperature();
         
     } else if(btn.getName() == "climateOkBtn") {
         screenManager.homeScreen();
         
     } else if(btn.getName() == "targetTempUpBtn") {
+        bool warning;
+        char tempUnit = tent.state.getTempUnit();
         float targetTemperature = tent.state.getTargetTemperature();
-        targetTemperature += 2;
         
-        bool warning = (targetTemperature < 97) ? false : true;
+        if(tempUnit == 'F')
+        {
+            targetTemperature += 2;
+            warning = (targetTemperature < 97) ? false : true;
+            
+        } else if(tempUnit == 'C') 
+        {
+            targetTemperature += 1;
+            warning = (targetTemperature < 35) ? false : true;
+            
+        }
 
         if (!warning)
             tent.state.setTargetTemperature(targetTemperature);
@@ -115,10 +145,17 @@ void ClimateScreen::handleButton(Button& btn)
         tent.adjustFan();
         
     } else if(btn.getName() == "targetTempDownBtn") {
+        bool warning;
+        char tempUnit = tent.state.getTempUnit();
         float targetTemperature = tent.state.getTargetTemperature();
-        targetTemperature -= 2;
         
-        bool warning = (targetTemperature > 47) ? false : true;
+        if(tempUnit == 'F') {
+            targetTemperature -= 2;
+            warning = (targetTemperature > 47) ? false : true;
+        } else if(tempUnit == 'C') {
+            targetTemperature -= 1;
+            warning = (targetTemperature > 8) ? false : true;
+        }
 
         if (!warning)
             tent.state.setTargetTemperature(targetTemperature);
@@ -159,15 +196,11 @@ void ClimateScreen::drawTargetTemperature(bool warning)
     float targetTemperature = tent.state.getTargetTemperature();
     char tempUnit = tent.state.getTempUnit();
     
-    if(tempUnit == 'C') {
-        targetTemperature = tent.convertFtoC(targetTemperature);
-    }
-    
     if(warning) {
         tft.setCursor(92, 93);
         tft.setTextSize(2);
         tft.setTextColor(ILI9341_RED);
-        tft.print(String::format("%.1f", targetTemperature));
+        tft.print(String::format("%.0f", targetTemperature));
         tft.setTextSize(1);
         tft.print(tempUnit);
         unsigned long waitUntil = millis()+100;
@@ -176,7 +209,7 @@ void ClimateScreen::drawTargetTemperature(bool warning)
     tft.setCursor(92, 93);
     tft.setTextSize(2);
     tft.setTextColor(ILI9341_WHITE);
-    tft.print(String::format("%.1f", targetTemperature));
+    tft.print(String::format("%.0f", targetTemperature));
     tft.setTextSize(1);
     tft.print(tempUnit);
     
@@ -195,7 +228,7 @@ void ClimateScreen::drawTargetHumidity(bool warning)
             tft.setCursor(92, 177);
         }
         tft.setTextSize(2);
-        tft.print(String::format("%.1f", targetHumidity));
+        tft.print(String::format("%.0f", targetHumidity));
         tft.setTextSize(1);
         tft.print("%");
         unsigned long waitUntil = millis()+100;
@@ -208,7 +241,7 @@ void ClimateScreen::drawTargetHumidity(bool warning)
         tft.setCursor(92, 177);
     }
     tft.setTextSize(2);
-    tft.print(String::format("%.1f", targetHumidity));
+    tft.print(String::format("%.0f", targetHumidity));
     tft.setTextSize(1);
     tft.print("%");
     

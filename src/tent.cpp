@@ -426,11 +426,21 @@ void Tent::adjustFan()
 
     } else {
         float fanSpeedPercent;
+        char tempUnit = state.getTempUnit();
         float fanSpeedMinSetting = state.getFanSpeedMin();
         float fanSpeedMaxSetting = state.getFanSpeedMax();
         float goalTemperature = state.getTargetTemperature();
-        float fan_react_zone_low = goalTemperature - 2;
-        float fan_react_zone_high = goalTemperature + 5;
+        
+        if(tempUnit == 'F')
+        {
+            float fan_react_zone_low = goalTemperature - 2;
+            float fan_react_zone_high = goalTemperature + 5;
+        } else if(tempUnit == 'C')
+        {
+            float fan_react_zone_low = goalTemperature - 2;
+            float fan_react_zone_high = goalTemperature + 5;
+        }
+        
         float fanSpeedStep = (fanSpeedMaxSetting - fanSpeedMinSetting) / 7;
 
         if (sensors.tentTemperatureF < fan_react_zone_low) {
@@ -459,4 +469,9 @@ void Tent::adjustFan()
 float Tent::convertFtoC(float tempF)
 {
     return (tempF-32)*0.5556;
+}
+
+float Tent::convertCtoF(float tempC)
+{
+    return (tempC*1.8)+32;
 }
