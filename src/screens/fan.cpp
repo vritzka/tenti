@@ -209,14 +209,14 @@ void FanScreen::drawFanSpeedSettings(void)
         tft.fillRect(225, 75, 51, 122, ILI9341_BLACK);
         tft.setTextColor(ILI9341_WHITE);
 
-        tft.setCursor(229, 67);
+        tft.setCursor(216, 67);
         tft.setTextSize(1);
-        tft.print("Min Speed");
+        tft.print("Fan Speed MIN");
         drawFanSpeedMin();
 
-        tft.setCursor(229, 142);
+        tft.setCursor(216, 142);
         tft.setTextSize(1);
-        tft.println("Max Speed");
+        tft.println("Fan Speed MAX");
         drawFanSpeedMax();
 
         buttons.push_back(Button("fanMinUpBtn", 280, 85, 30, 30, "", 0, 0));
