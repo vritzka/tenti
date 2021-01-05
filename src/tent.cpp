@@ -432,7 +432,7 @@ void Tent::adjustFan()
         float tentTemperature;
         float fanSpeedMinSetting = state.getFanSpeedMin();
         float fanSpeedMaxSetting = state.getFanSpeedMax();
-        float fanSpeedStep = (fanSpeedMaxSetting - fanSpeedMinSetting) / 2;
+        float fanSpeedStep = (fanSpeedMaxSetting - fanSpeedMinSetting) / 10;
         float goalTemperature = state.getTargetTemperature();
         float deviation;
         
@@ -457,10 +457,10 @@ void Tent::adjustFan()
         } else if (tentTemperature >= fan_react_temp_low && tentTemperature <= fan_react_temp_high) {
             
             fanSpeedPercent = map(tentTemperature, fan_react_temp_low, fan_react_temp_high, fanSpeedMinSetting, fanSpeedMaxSetting);
-            fanSpeedPercent = round(fanSpeedPercent);
+            fanSpeedPercent = ceil(fanSpeedPercent);
             
         } else if(tentTemperature > fan_react_temp_high) {
-            fanSpeedPercent = fanSpeedMinSetting;
+            fanSpeedPercent = fanSpeedMaxSetting;
             
         }
             
@@ -471,7 +471,7 @@ void Tent::adjustFan()
 
         //sensor fail
         if (sensors.tentHumidity < 0)
-            //fanSpeedPercent = fanSpeedMinSetting + 10;
+            fanSpeedPercent = fanSpeedMinSetting + 10;
 
         if (fanSpeedPercent != state.getFanSpeed()) {
             state.setFanSpeed(fanSpeedPercent);

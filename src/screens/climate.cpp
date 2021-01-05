@@ -216,16 +216,16 @@ void ClimateScreen::drawTargetTemperature(bool warning)
 
 void ClimateScreen::drawTargetHumidity(bool warning)
 {
-    tft.fillRect(92, 177, 57, 15, ILI9341_BLACK);
+    tft.fillRect(102, 172, 65, 22, ILI9341_BLACK);
     float targetHumidity = tent.state.getTargetHumidity();
     if(warning) {
         tft.setTextColor(ILI9341_RED);
         if(targetHumidity < 10) {
-            tft.setCursor(97, 177);
+            tft.setCursor(102, 172);
         } else {
-            tft.setCursor(92, 177);
+            tft.setCursor(102, 172);
         }
-        tft.setTextSize(2);
+        tft.setTextSize(3);
         tft.print(String::format("%.0f", targetHumidity));
         tft.setTextSize(1);
         tft.print("%");
@@ -234,11 +234,11 @@ void ClimateScreen::drawTargetHumidity(bool warning)
     }
     tft.setTextColor(ILI9341_WHITE);
     if(targetHumidity < 10) {
-        tft.setCursor(97, 177);
+        tft.setCursor(102, 172);
     } else {
-        tft.setCursor(92, 177);
+        tft.setCursor(102, 172);
     }
-    tft.setTextSize(2);
+    tft.setTextSize(3);
     tft.print(String::format("%.0f", targetHumidity));
     tft.setTextSize(1);
     tft.print("%");
