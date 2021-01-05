@@ -426,37 +426,52 @@ void Tent::adjustFan()
 
     } else {
         float fanSpeedPercent;
+        float fan_react_temp_low;
+        float fan_react_temp_high;        
         char tempUnit = state.getTempUnit();
+        float tentTemperature;
         float fanSpeedMinSetting = state.getFanSpeedMin();
         float fanSpeedMaxSetting = state.getFanSpeedMax();
+        float fanSpeedStep = (fanSpeedMaxSetting - fanSpeedMinSetting) / 2;
         float goalTemperature = state.getTargetTemperature();
+        float deviation;
         
         if(tempUnit == 'F')
         {
-            float fan_react_zone_low = goalTemperature - 2;
-            float fan_react_zone_high = goalTemperature + 5;
+            tentTemperature = sensors.tentTemperatureF;
+            fan_react_temp_low = goalTemperature - 3;
+            fan_react_temp_high = goalTemperature + 5;
+                
         } else if(tempUnit == 'C')
         {
-            float fan_react_zone_low = goalTemperature - 2;
-            float fan_react_zone_high = goalTemperature + 5;
+            tentTemperature = sensors.tentTemperatureC;
+            fan_react_temp_low = goalTemperature - 2;
+            fan_react_temp_high = goalTemperature + 4;
+            
         }
         
-        float fanSpeedStep = (fanSpeedMaxSetting - fanSpeedMinSetting) / 7;
 
-        if (sensors.tentTemperatureF < fan_react_zone_low) {
+        if (tentTemperature < fan_react_temp_low) {
             fanSpeedPercent = fanSpeedMinSetting;
-
-        } else if (sensors.tentTemperatureF >= fan_react_zone_low) {
-            float deviation = sensors.tentTemperatureF - fan_react_zone_low;
-            fanSpeedPercent = ceil(fanSpeedMinSetting + (deviation * fanSpeedStep));
-            if (fanSpeedPercent > fanSpeedMaxSetting) {
-                fanSpeedPercent = fanSpeedMaxSetting;
-            }
+            
+        } else if (tentTemperature >= fan_react_temp_low && tentTemperature <= fan_react_temp_high) {
+            
+            fanSpeedPercent = map(tentTemperature, fan_react_temp_low, fan_react_temp_high, fanSpeedMinSetting, fanSpeedMaxSetting);
+            fanSpeedPercent = round(fanSpeedPercent);
+            
+        } else if(tentTemperature > fan_react_temp_high) {
+            fanSpeedPercent = fanSpeedMinSetting;
+            
+        }
+            
+            
+        if (fanSpeedPercent > fanSpeedMaxSetting) {
+            fanSpeedPercent = fanSpeedMaxSetting;
         }
 
         //sensor fail
         if (sensors.tentHumidity < 0)
-            fanSpeedPercent = fanSpeedMinSetting + 10;
+            //fanSpeedPercent = fanSpeedMinSetting + 10;
 
         if (fanSpeedPercent != state.getFanSpeed()) {
             state.setFanSpeed(fanSpeedPercent);

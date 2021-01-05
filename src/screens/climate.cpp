@@ -17,7 +17,7 @@ void ClimateScreen::render()
     tft.setTextSize(2);
     tft.print("Climate Settings");
     
-    tft.setCursor(64,65);
+    tft.setCursor(64,60);
     tft.setTextSize(1);
     tft.print("Target Temperature");
     buttons.push_back(Button("targetTempUpBtn", 165, 86, 30, 30, "", 0, 0));
@@ -29,8 +29,6 @@ void ClimateScreen::render()
     buttons.push_back(Button("targetHumUpBtn", 165, 170, 30, 30, "", 0, 0));
     buttons.push_back(Button("targetHumDownBtn", 40, 170, 30, 30, "", 0, 0));    
     
-    tft.setCursor(258, 55);
-    tft.print("Unit");
     buttons.push_back(Button("climateUnitFBtn", 250, 70, 40, 38, "F", 15, 11));
     buttons.push_back(Button("climateUnitCBtn", 250, 107, 40, 38, "C", 15, 11));
     
@@ -154,7 +152,7 @@ void ClimateScreen::handleButton(Button& btn)
             warning = (targetTemperature > 47) ? false : true;
         } else if(tempUnit == 'C') {
             targetTemperature -= 1;
-            warning = (targetTemperature > 8) ? false : true;
+            warning = (targetTemperature > 9) ? false : true;
         }
 
         if (!warning)
@@ -192,13 +190,13 @@ void ClimateScreen::handleButton(Button& btn)
 
 void ClimateScreen::drawTargetTemperature(bool warning)
 {
-    tft.fillRect(92, 93, 57, 15, ILI9341_BLACK);
+    tft.fillRect(102, 88, 65, 22, ILI9341_BLACK);
     float targetTemperature = tent.state.getTargetTemperature();
     char tempUnit = tent.state.getTempUnit();
     
     if(warning) {
-        tft.setCursor(92, 93);
-        tft.setTextSize(2);
+        tft.setCursor(102, 88);
+        tft.setTextSize(3);
         tft.setTextColor(ILI9341_RED);
         tft.print(String::format("%.0f", targetTemperature));
         tft.setTextSize(1);
@@ -206,8 +204,8 @@ void ClimateScreen::drawTargetTemperature(bool warning)
         unsigned long waitUntil = millis()+100;
         while (waitUntil > millis()) { } 
     }
-    tft.setCursor(92, 93);
-    tft.setTextSize(2);
+    tft.setCursor(102, 88);
+    tft.setTextSize(3);
     tft.setTextColor(ILI9341_WHITE);
     tft.print(String::format("%.0f", targetTemperature));
     tft.setTextSize(1);
