@@ -449,7 +449,6 @@ void Tent::adjustFan()
             fan_react_temp_high = goalTemperature + 4;
             
         }
-        
 
         if (tentTemperature < fan_react_temp_low) {
             fanSpeedPercent = fanSpeedMinSetting;
