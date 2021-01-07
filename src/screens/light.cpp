@@ -1,0 +1,87 @@
+#include "light.h"
+#include "icons.h"
+#include "tent.h"
+#include "screen_manager.h"
+
+extern ScreenManager screenManager;
+extern Tent tent;
+
+void LightScreen::render()
+{
+    tft.fillScreen(ILI9341_BLACK);
+
+    tft.setCursor(20, 8);
+    tft.setTextColor(ILI9341_GREEN);
+    tft.setTextSize(2);
+    tft.print("Growlight Settings");
+
+    int dayDuration = tent.state.getDayDuration();
+    renderDayDuration(dayDuration);
+
+    buttons.push_back(Button("timerUpBtn", 240, 50, 40, 40, "", 0, 0));
+    buttons.push_back(Button("timerDownBtn", 240, 130, 40, 40, "", 0, 0));
+    buttons.push_back(Button("timerOkBtn", 20, 180, 250, 38, "Ok", 110, 8));
+
+    renderButtons(true);
+}
+
+void LightScreen::renderButton(Button& btn)
+{
+    if (btn.getName() == "timerUpBtn") {
+        tft.fillTriangle(240, 95, 260, 55, 280, 95, ILI9341_RED);
+        tft.drawTriangle(240, 95, 260, 55, 280, 95, ILI9341_LIGHTGREY);
+
+    } else if (btn.getName() == "timerDownBtn") {
+        tft.fillTriangle(240, 170, 260, 130, 280, 170, ILI9341_RED);
+        tft.drawTriangle(240, 170, 260, 130, 280, 170, ILI9341_LIGHTGREY);
+
+    } else if (btn.getName() == "timerOkBtn") {
+        drawButton(btn, ILI9341_OLIVE, 3);
+    }
+}
+
+void LightScreen::renderButtonPressed(Button& btn)
+{
+    if (btn.getName() == "timerUpBtn") {
+        tft.fillTriangle(240, 95, 260, 55, 280, 95, ILI9341_WHITE);
+    } else if (btn.getName() == "timerDownBtn") {
+        tft.fillTriangle(240, 170, 260, 130, 280, 170, ILI9341_WHITE);
+    }
+}
+
+void LightScreen::renderDayDuration(int dayDuration)
+{
+    tft.fillRect(10, 70, 200, 22, ILI9341_BLACK);
+    tft.setTextColor(ILI9341_WHITE);
+    tft.setTextSize(2);
+    tft.setCursor(10, 70);
+    tft.print(String(dayDuration / 60) + " Hours ON");
+
+    tft.setCursor(10, 140);
+    tft.fillRect(10, 140, 215, 22, ILI9341_BLACK);
+    int nightDuration = (24 * 60) - dayDuration;
+    tft.print(String(nightDuration / 60) + " Hours OFF");
+}
+
+void LightScreen::handleButton(Button& btn)
+{
+    if (btn.getName() == "timerUpBtn") {
+        int dayDuration = tent.state.getDayDuration() + 60;
+        if (dayDuration > 1440) {
+            dayDuration = 60;
+        }
+        tent.state.setDayDuration(dayDuration);
+        renderDayDuration(dayDuration);
+
+    } else if (btn.getName() == "timerDownBtn") {
+        int dayDuration = tent.state.getDayDuration() - 60;
+        if (dayDuration <= 0) {
+            dayDuration = 1440;
+        }
+        tent.state.setDayDuration(dayDuration);
+        renderDayDuration(dayDuration);
+
+    } else if (btn.getName() == "timerOkBtn") {
+        screenManager.homeScreen();
+    }
+}
