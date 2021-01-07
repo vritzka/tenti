@@ -23,9 +23,9 @@ void ClimateScreen::render()
     buttons.push_back(Button("targetTempUpBtn", 165, 86, 30, 30, "", 0, 0));
     buttons.push_back(Button("targetTempDownBtn", 40, 86, 30, 30, "", 0, 0));
         
-    tft.setCursor(73,150);
+    tft.setCursor(83,150);
     tft.setTextSize(1);
-    tft.print("Target Humidity");
+    tft.print("Max Humidity");
     buttons.push_back(Button("targetHumUpBtn", 165, 170, 30, 30, "", 0, 0));
     buttons.push_back(Button("targetHumDownBtn", 40, 170, 30, 30, "", 0, 0));    
     
@@ -221,7 +221,7 @@ void ClimateScreen::drawTargetHumidity(bool warning)
     if(warning) {
         tft.setTextColor(ILI9341_RED);
         if(targetHumidity < 10) {
-            tft.setCursor(102, 172);
+            tft.setCursor(110, 172);
         } else {
             tft.setCursor(102, 172);
         }
@@ -234,7 +234,7 @@ void ClimateScreen::drawTargetHumidity(bool warning)
     }
     tft.setTextColor(ILI9341_WHITE);
     if(targetHumidity < 10) {
-        tft.setCursor(102, 172);
+        tft.setCursor(110, 172);
     } else {
         tft.setCursor(102, 172);
     }

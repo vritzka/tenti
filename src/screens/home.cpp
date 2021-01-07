@@ -20,11 +20,8 @@ void HomeScreen::render()
         tft.setTextColor(ILI9341_LIGHTGREY);
         tft.setTextSize(2);
 
-        tft.setCursor(126, 20);
-        tft.print("Hi,");
-
-        tft.setCursor(85, 45);
-        tft.print("I'm Tomatotent!");
+        tft.setCursor(126, 40);
+        tft.print("Hello!");
 
         tft.drawBitmap(20, 20, tomato_filled_50, 50, 50, ILI9341_RED);
 
@@ -52,7 +49,7 @@ void HomeScreen::render()
             buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
             buttons.push_back(Button("timerBtn", 10, 10, 115, 30, "", 18, 8));
             buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
-            buttons.push_back(Button("tempBtn", 50, 55, 115, 35, "", 18, 8));
+            buttons.push_back(Button("tempBtn", 40, 70, 180, 85, "", 18, 8));
             break;
         case 'd':
             tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
@@ -74,7 +71,7 @@ void HomeScreen::render()
 
             buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
             buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
-            buttons.push_back(Button("tempBtn", 50, 70, 165, 32, "", 18, 8));
+            buttons.push_back(Button("tempBtn", 40, 70, 180, 85, "", 18, 8));
             buttons.push_back(Button("dryingHintbtn", 250, 150, 36, 36, "", 18, 8));
 
             break;
@@ -297,7 +294,7 @@ void HomeScreen::renderButton(Button& btn)
         drawButton(btn, ILI9341_OLIVE, 3);
     } else if (btn.getName() == "wifiBtn") {
         tft.drawBitmap(btn.x0 + 19, btn.y0 + 5, iconWifi_24x24, 24, 24, WiFi.ready() ? ILI9341_LIGHTGREY : ILI9341_DARKGREY);
-    }
+    } 
 }
 
 void HomeScreen::renderButtonPressed(Button& btn)
