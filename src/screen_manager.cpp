@@ -2,7 +2,7 @@
 #include "tent.h"
 #include "screens/cancel.h"
 #include "screens/cancel_confirm.h"
-#include "screens/timer.h"
+#include "screens/light.h"
 #include "screens/fan.h"
 #include "screens/firmware_update.h"
 #include "screens/climate.h"
@@ -75,9 +75,9 @@ void ScreenManager::cancelConfirmationScreen()
     render();
 }
 
-void ScreenManager::timerScreen()
+void ScreenManager::lightScreen()
 {
-    current.reset(new TimerScreen());
+    current.reset(new LightScreen());
     render();
 }
 

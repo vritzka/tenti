@@ -47,7 +47,7 @@ void HomeScreen::render()
             drawFanStatus();
 
             buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
-            buttons.push_back(Button("timerBtn", 10, 10, 115, 30, "", 18, 8));
+            buttons.push_back(Button("lightBtn", 10, 10, 115, 30, "", 18, 8));
             buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
             buttons.push_back(Button("tempBtn", 40, 70, 180, 85, "", 18, 8));
             break;
@@ -318,7 +318,7 @@ void HomeScreen::handleButton(Button& btn)
 
         screenManager.growStartedScreen();
 
-        delay(3000);
+        delay(1500);
 
         screenManager.homeScreen();
         tent.start();
@@ -339,8 +339,8 @@ void HomeScreen::handleButton(Button& btn)
     } else if (btn.getName() == "dayCounterBtn") {
         screenManager.cancelScreen();
 
-    } else if (btn.getName() == "timerBtn") {
-        screenManager.timerScreen();
+    } else if (btn.getName() == "lightBtn") {
+        screenManager.lightScreen();
 
     } else if (btn.getName() == "fanBtn") {
         screenManager.fanScreen();

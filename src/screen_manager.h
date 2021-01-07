@@ -51,7 +51,7 @@ public:
     void growStartedScreen();
     void cancelScreen();
     void cancelConfirmationScreen();
-    void timerScreen();
+    void lightScreen();
     void wifiScreen();
     void wifiSplashScreen();
     void fanScreen();
