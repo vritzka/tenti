@@ -20,6 +20,7 @@ class TentState {
         float targetHumidity;
         float fanSpeedMin;
         float fanSpeedMax;
+        int ledBrightnessMax;
     } eeprom;
 
 public:
@@ -40,6 +41,7 @@ public:
         eeprom.targetHumidity = 50.0;
         eeprom.fanSpeedMin = 15;
         eeprom.fanSpeedMax = 40;
+        eeprom.ledBrightnessMax = 100;
         save();
     }
     void migrate()
@@ -62,6 +64,9 @@ public:
 
         } else if (getMode() != 'g' && getMode() != 'd') {
             setMode('g');
+            
+        } else if (getLedBrightnessMax() < 0) {
+            setLedBrightnessMax(100);
         }
     }
     void begin();
@@ -105,4 +110,7 @@ public:
 
     float getTargetHumidity(void);
     void setTargetHumidity(float);
+    
+    int getLedBrightnessMax(void);
+    void setLedBrightnessMax(int);
 };

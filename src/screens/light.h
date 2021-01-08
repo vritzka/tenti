@@ -13,5 +13,6 @@ public:
 
 private:
     void renderDayDuration(int dayDuration);
+    void renderLedBrightness();
 };
 #endif

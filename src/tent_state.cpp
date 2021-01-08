@@ -155,6 +155,17 @@ void TentState::setTargetHumidity(float targetHumidity)
     save();
 }
 
+int TentState::getLedBrightnessMax() 
+{
+    return eeprom.ledBrightnessMax;
+}
+
+void TentState::setLedBrightnessMax(int brightness)
+{
+    eeprom.ledBrightnessMax = brightness;
+    save();
+}
+
 void TentState::save()
 {
     EEPROM.put(0, eeprom);

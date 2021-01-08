@@ -4,7 +4,7 @@
 
 extern ScreenManager screenManager;
 
-const int minBrightness = 20, maxBrightness = 255;
+const int minBrightness = 20;
 
 Tent::Tent()
     : sensorTimer { Timer(5000, &Tent::markNeedsSensorUpdate, *this) }
@@ -200,9 +200,8 @@ void Tent::checkInputs()
     unsigned long now = millis();
     unsigned long diff = now - lastDimmerBtnTime;
 
-    if (diff <= 300) {
+    if (diff <= 300)
         return;
-    }
 
     lastDimmerBtnTime = now;
     dimmerBtnPressed = false;
@@ -212,40 +211,6 @@ void Tent::checkInputs()
     } else {
         dimGrowLight();
     }
-}
-
-int Tent::growLight(String brightness)
-{
-    if (brightness == "HIGH") {
-        analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, maxBrightness, 25000);
-        digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
-        growLightStatus = brightness;
-        rawSensors.lightBrightness = 1.0;
-
-    } else if (brightness == "LOW") {
-        analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, minBrightness, 25000);
-        digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
-        growLightStatus = brightness;
-        dimTimeout = 15;
-        rawSensors.lightBrightness = 0.1;
-
-    } else if (brightness == "MUTE") {
-        digitalWrite(GROW_LIGHT_ON_OFF_PIN, LOW);
-        growLightStatus = brightness;
-        rawSensors.lightBrightness = 0.0;
-
-    } else if (brightness == "OFF") {
-        digitalWrite(GROW_LIGHT_ON_OFF_PIN, LOW);
-        growLightStatus = brightness;
-        rawSensors.lightBrightness = 0.0;
-    }
-
-    return 1;
-}
-
-String Tent::getGrowLightStatus()
-{
-    return this->growLightStatus;
 }
 
 void Tent::minutelyTick()
@@ -297,8 +262,45 @@ void Tent::publishMetrics()
     Particle.publish("metrics", data, PRIVATE);
 }
 
+int Tent::growLight(String brightness)
+{
+    int maxBrightness = map(state.getLedBrightnessMax(),0,133,0,255);   //the dimmer hardware produces 10V @ about 70%
+    if (brightness == "HIGH") {
+        analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, maxBrightness, 25000);
+        digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
+        growLightStatus = brightness;
+        rawSensors.lightBrightness = 1.0;
+
+    } else if (brightness == "LOW") {
+        analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, minBrightness, 25000);
+        digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
+        growLightStatus = brightness;
+        dimTimeout = 15;
+        rawSensors.lightBrightness = 0.1;
+
+    } else if (brightness == "MUTE") {
+        digitalWrite(GROW_LIGHT_ON_OFF_PIN, LOW);
+        growLightStatus = brightness;
+        rawSensors.lightBrightness = 0.0;
+
+    } else if (brightness == "OFF") {
+        digitalWrite(GROW_LIGHT_ON_OFF_PIN, LOW);
+        growLightStatus = brightness;
+        rawSensors.lightBrightness = 0.0;
+    }
+
+    return 1;
+}
+
+String Tent::getGrowLightStatus()
+{
+    return this->growLightStatus;
+}
+
+
 void Tent::fadeGrowLight(String mode, int percent)
 {
+    int maxBrightness = map(state.getLedBrightnessMax(),0,100,0,255);
     int brightnessRange = maxBrightness - minBrightness;
     int brightness = maxBrightness / 2;
     if (mode == "SUNRISE") {
@@ -306,7 +308,8 @@ void Tent::fadeGrowLight(String mode, int percent)
     } else if (mode == "SUNSET") {
         brightness = maxBrightness - (brightnessRange * percent / 100);
     }
-    analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, brightness, 25000);
+    //analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, brightness, 25000);
+    analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, state.getLedBrightnessMax(), 25000);
     digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
     rawSensors.lightBrightness = brightness / 255.0;
 }
@@ -331,22 +334,6 @@ void Tent::muteGrowLight()
     screenManager.markNeedsRedraw(DIMMED);
 }
 
-void Tent::displayLightLow(void)
-{
-    while (displayBrightness > 30) {
-        displayBrightness -= 5;
-        analogWrite(TFT_BRIGHTNESS_PIN, displayBrightness);
-        delay(10);
-    }
-}
-
-void Tent::displayLightOff(void)
-{
-    analogWrite(TFT_BRIGHTNESS_PIN, 0);
-    RGB.control(true);
-    RGB.brightness(0);
-}
-
 bool Tent::displayLightHigh()
 {
     unsigned long now = millis();
@@ -369,6 +356,22 @@ bool Tent::displayLightHigh()
     } else {
         return false;
     }
+}
+
+void Tent::displayLightLow(void)
+{
+    while (displayBrightness > 30) {
+        displayBrightness -= 5;
+        analogWrite(TFT_BRIGHTNESS_PIN, displayBrightness);
+        delay(10);
+    }
+}
+
+void Tent::displayLightOff(void)
+{
+    analogWrite(TFT_BRIGHTNESS_PIN, 0);
+    RGB.control(true);
+    RGB.brightness(0);
 }
 
 void Tent::countMinute()
