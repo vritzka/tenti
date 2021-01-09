@@ -183,7 +183,8 @@ void LightScreen::renderLedBrightness() {
     tft.setCursor(171,99);
     tft.print("Brightness");
     
-    tft.setCursor(197,147);
+    tft.setCursor(195,142);
+    tft.setTextSize(2);
     tft.print("%");
 
 }
