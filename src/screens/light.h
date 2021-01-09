@@ -7,6 +7,7 @@ class LightScreen : public Screen {
 public:
     String getName() { return "lightScreen"; }
     void render();
+    void update();
     void renderButton(Button& btn);
     void renderButtonPressed(Button& btn);
     void handleButton(Button& btn);

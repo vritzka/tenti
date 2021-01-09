@@ -11,7 +11,6 @@ private:
     void drawSoilMoisture();
     void drawSoilTemperature();
     void drawDayCounter();
-    void drawTimerStatus();
     void drawClock();
 
     bool wifiReady;

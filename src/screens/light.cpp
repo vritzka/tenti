@@ -10,12 +10,7 @@ void LightScreen::render()
 {
     tft.fillScreen(ILI9341_BLACK);
 
-    tft.setCursor(45, 8);
-    tft.setTextColor(ILI9341_WHITE);
-    tft.setTextSize(2);
-    tft.print("Growlight Settings");
-
-    int dayDuration = tent.state.getDayDuration();
+    uint16_t dayDuration = tent.state.getDayDuration();
     renderDayDuration(dayDuration);
 
     buttons.push_back(Button("timerUpBtn", 39, 50, 40, 40, "", 0, 0));
@@ -25,11 +20,21 @@ void LightScreen::render()
     buttons.push_back(Button("brightnessDownBtn", 180, 160, 40, 40, "", 0, 0));
     
     renderLedBrightness();
+    drawTimerStatus();
     
     buttons.push_back(Button("lightOkBtn", 250, 180, 40, 38, "OK", 9, 12));
 
     renderButtons(true);
 }
+
+void LightScreen::update()
+{
+    if (screenManager.wasNeedsRedraw(TIMER))
+        drawTimerStatus();
+        
+    Screen::update();
+}
+
 
 void LightScreen::renderButton(Button& btn)
 {
@@ -76,6 +81,7 @@ void LightScreen::handleButton(Button& btn)
         }
         tent.state.setDayDuration(dayDuration);
         renderDayDuration(dayDuration);
+        drawTimerStatus();
 
     } else if (btn.getName() == "timerDownBtn") {
         int dayDuration = tent.state.getDayDuration() - 60;
@@ -84,6 +90,7 @@ void LightScreen::handleButton(Button& btn)
         }
         tent.state.setDayDuration(dayDuration);
         renderDayDuration(dayDuration);
+        drawTimerStatus();
 
     } else if(btn.getName() == "brightnessUpBtn") {
         int brightness = tent.state.getLedBrightnessMax();
@@ -94,6 +101,8 @@ void LightScreen::handleButton(Button& btn)
         tent.state.setLedBrightnessMax(brightness);
         tent.growLight("HIGH");
         renderLedBrightness();
+        drawTimerStatus();
+        screenManager.markNeedsRedraw(DIMMED);
 
     } else if(btn.getName() == "brightnessDownBtn") {
         int brightness = tent.state.getLedBrightnessMax();
@@ -103,7 +112,10 @@ void LightScreen::handleButton(Button& btn)
         brightness -= 5;
         tent.state.setLedBrightnessMax(brightness);
         tent.growLight("HIGH");
-        renderLedBrightness();        
+        renderLedBrightness(); 
+        drawTimerStatus();
+        screenManager.markNeedsRedraw(DIMMED);
+
     } else if (btn.getName() == "lightOkBtn") {
         screenManager.homeScreen();
     }
@@ -136,9 +148,9 @@ void LightScreen::renderDayDuration(int dayDuration)
     
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_LIGHTGREY);
-    tft.setCursor(33,98);
+    tft.setCursor(33,99);
     tft.print("Lights On");
-    tft.setCursor(44,146);
+    tft.setCursor(44,147);
     tft.print("Hours");
     
 
@@ -168,10 +180,10 @@ void LightScreen::renderLedBrightness() {
     tft.setTextColor(ILI9341_LIGHTGREY);
     tft.setTextSize(1);
     
-    tft.setCursor(171,98);
+    tft.setCursor(171,99);
     tft.print("Brightness");
     
-    tft.setCursor(197,146);
+    tft.setCursor(197,147);
     tft.print("%");
 
 }

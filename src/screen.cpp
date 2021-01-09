@@ -94,6 +94,74 @@ void Screen::drawFanStatus()
     }
 }
 
+void Screen::drawTimerStatus()
+{
+    int hoursLeft;
+    int minutesLeft;
+    int maxBrightness = tent.state.getLedBrightnessMax();
+
+    if (tent.state.isDay()) {
+        tft.setTextColor(ILI9341_YELLOW);
+        hoursLeft = floor((tent.state.getDayDuration() - tent.state.getMinutesInPhotoperiod()) / 60);
+        minutesLeft = (tent.state.getDayDuration() - tent.state.getMinutesInPhotoperiod()) % 60;
+    } else {
+        tft.setTextColor(ILI9341_BLUE);
+        hoursLeft = floor((((24 * 60) - tent.state.getDayDuration()) - tent.state.getMinutesInPhotoperiod()) / 60);
+        minutesLeft = (((24 * 60) - tent.state.getDayDuration()) - tent.state.getMinutesInPhotoperiod()) % 60;
+    }
+
+    if (hoursLeft < 0 || minutesLeft < 0) {
+
+        tent.countMinute();
+
+    } else {
+
+        tft.fillRect(5, 5, 137, 37, ILI9341_BLACK);
+
+        tft.setCursor(50, 10);
+        tft.setTextSize(2);
+
+        tft.print(String(hoursLeft));
+        tft.setTextSize(1);
+        tft.print("hrs ");
+        tft.setTextSize(2);
+        tft.print("" + String(minutesLeft));
+        tft.setTextSize(1);
+        tft.print("min");
+
+        tft.setCursor(53, 31);
+        tft.setTextSize(1);
+        if (tent.state.isDay()) {
+            tft.drawBitmap(7, 5, sun_36, 36, 36, ILI9341_YELLOW);
+
+            if(tent.state.getDayDuration() == 1440) {
+                tft.print("always on");
+            } else {
+                tft.print("until sunset"); 
+            }
+            
+            if(maxBrightness < 100) {
+                tft.setCursor(18,20);
+                tft.setTextColor(ILI9341_DARKGREY);
+                //tft.print(String(maxBrightness));
+                uint16_t c = maxBrightness/10;
+                if(c < 1)
+                    c = 1;
+                uint16_t r = 11;
+                while(r >= c) {
+                    tft.drawCircle(25,22,r,ILI9341_BLACK);
+                    r -= 1;
+                }
+            }
+            
+        } else {
+            tft.drawBitmap(7, 5, moon_and_stars_36, 36, 36, ILI9341_BLUE);
+            tft.print("until sunrise");
+        }
+    }
+}
+
+
 void Screen::update()
 {
     if (screenManager.wasNeedsRedraw(DIMMED)) {

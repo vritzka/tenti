@@ -120,7 +120,7 @@ void ClimateScreen::handleButton(Button& btn)
         screenManager.homeScreen();
         
     } else if(btn.getName() == "targetTempUpBtn") {
-        bool warning;
+        bool warning=0;
         char tempUnit = tent.state.getTempUnit();
         float targetTemperature = tent.state.getTargetTemperature();
         

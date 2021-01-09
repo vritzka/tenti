@@ -13,6 +13,7 @@ protected:
     void drawButtonTriangleUp(Button& btn, int color);
     void drawButtonTriangleDown(Button& btn, int color);
     void drawFanStatus();
+    void drawTimerStatus();
     void drawDimmedIndicator();
     void hideDimmedIndicator();
 
