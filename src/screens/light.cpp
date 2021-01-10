@@ -97,7 +97,7 @@ void LightScreen::handleButton(Button& btn)
         if(brightness == 100)
             return;
             
-        brightness += 5;
+        brightness += 10;
         tent.state.setLedBrightnessMax(brightness);
         tent.growLight("HIGH");
         renderLedBrightness();
@@ -106,10 +106,10 @@ void LightScreen::handleButton(Button& btn)
 
     } else if(btn.getName() == "brightnessDownBtn") {
         int brightness = tent.state.getLedBrightnessMax();
-        if(brightness == 5)
+        if(brightness == 10)
             return;
             
-        brightness -= 5;
+        brightness -= 10;
         tent.state.setLedBrightnessMax(brightness);
         tent.growLight("HIGH");
         renderLedBrightness(); 
