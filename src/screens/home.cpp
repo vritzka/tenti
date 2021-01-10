@@ -46,10 +46,10 @@ void HomeScreen::render()
             drawTimerStatus();
             drawFanStatus();
 
-            buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
-            buttons.push_back(Button("lightBtn", 10, 10, 115, 30, "", 18, 8));
-            buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
-            buttons.push_back(Button("tempBtn", 40, 70, 180, 85, "", 18, 8));
+            buttons.push_back(Button("dayCounterBtn", 40, 170, 130, 45, "", 18, 8));
+            buttons.push_back(Button("lightBtn", 0, 0, 139, 50, "", 18, 8));
+            buttons.push_back(Button("fanBtn", 155, 0, 105, 50, "", 18, 8));
+            buttons.push_back(Button("tempBtn", 40, 70, 160, 85, "", 18, 8));
             break;
         case 'd':
             tft.drawRect(20, 180, 250, 38, ILI9341_BLACK);
@@ -69,9 +69,9 @@ void HomeScreen::render()
             drawHumidity();
             drawFanStatus();
 
-            buttons.push_back(Button("dayCounterBtn", 20, 180, 250, 38, "", 18, 8));
-            buttons.push_back(Button("fanBtn", 145, 10, 115, 35, "", 18, 8));
-            buttons.push_back(Button("tempBtn", 40, 70, 180, 85, "", 18, 8));
+            buttons.push_back(Button("dayCounterBtn", 40, 170, 130, 45, "", 18, 8));
+            buttons.push_back(Button("fanBtn", 155, 0, 105, 50, "", 18, 8));
+            buttons.push_back(Button("tempBtn", 40, 70, 160, 85, "", 18, 8));
             buttons.push_back(Button("dryingHintbtn", 250, 150, 36, 36, "", 18, 8));
 
             break;

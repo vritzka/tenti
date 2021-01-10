@@ -72,7 +72,6 @@ void Screen::drawButtonTriangleDown(Button& btn, int color)
 
 void Screen::drawFanStatus()
 {
-    //write status to screen
     tft.fillRect(200, 10, 56, 35, ILI9341_BLACK);
 
     tft.setCursor(210, 10);
