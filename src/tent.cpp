@@ -269,11 +269,18 @@ int Tent::growLight(String brightness)
         analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, maxBrightness, 25000);
         digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
         growLightStatus = brightness;
-        rawSensors.lightBrightness = 1.0;
+        float brightnessForSensor = state.getLedBrightnessMax();
+        brightnessForSensor /= 100;
+        rawSensors.lightBrightness = brightnessForSensor;
 
     } else if (brightness == "LOW") {
-        analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, minBrightness, 25000);
-        digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
+        int maxBrightness = map(state.getLedBrightnessMax(),0,133,0,255); 
+        
+        if(minBrightness < maxBrightness) {
+            analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, minBrightness, 25000);
+            digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
+        }
+        
         growLightStatus = brightness;
         dimTimeout = 15;
         rawSensors.lightBrightness = 0.1;
@@ -300,7 +307,7 @@ String Tent::getGrowLightStatus()
 
 void Tent::fadeGrowLight(String mode, int percent)
 {
-    int maxBrightness = map(state.getLedBrightnessMax(),0,100,0,255);
+    int maxBrightness = map(state.getLedBrightnessMax(),0,133,0,255); 
     int brightnessRange = maxBrightness - minBrightness;
     int brightness = maxBrightness / 2;
     if (mode == "SUNRISE") {
