@@ -22,7 +22,7 @@ private:
     Timer sensorTimer, minuteTimer;
     Timer displayDimTimer, displayOffTimer;
 
-    int displayBrightness = 0;
+    int16_t displayBrightness = 0;
     String growLightStatus;
     unsigned long lastDisplayLightTime = 0;
     bool dimmerBtnPressed = false;
@@ -80,7 +80,8 @@ public:
 
     void fan(String fanStatus);
     int growLight(String brightness);
-    String getGrowLightStatus();
-    bool displayLightHigh();
+    String getGrowLightStatus(void);
+    bool displayLightHigh(void);
+    int16_t getDisplayBrightness(void);
 };
 #endif

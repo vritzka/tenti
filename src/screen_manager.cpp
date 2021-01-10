@@ -26,7 +26,14 @@ void ScreenManager::setup()
 void ScreenManager::tick()
 {
     if (ts.touched()) {
-        tent.displayLightHigh(); // Switch on Displaylight on touch
+        
+        if(tent.getDisplayBrightness() == 0) {
+            tent.displayLightHigh();
+            unsigned long waitUntil = millis() + 800;
+            while(millis() < waitUntil) {}
+            return;
+        }
+        tent.displayLightHigh();
 
         if (!current) {
             return;

@@ -344,6 +344,7 @@ bool Tent::displayLightHigh()
         while (displayBrightness < 255) {
             displayBrightness += 5;
             analogWrite(TFT_BRIGHTNESS_PIN, displayBrightness);
+            
             delay(5);
         }
         RGB.brightness(255);
@@ -370,8 +371,14 @@ void Tent::displayLightLow(void)
 void Tent::displayLightOff(void)
 {
     analogWrite(TFT_BRIGHTNESS_PIN, 0);
+    displayBrightness = 0;
     RGB.control(true);
     RGB.brightness(0);
+}
+
+int16_t Tent::getDisplayBrightness(void)
+{
+    return displayBrightness;
 }
 
 void Tent::countMinute()
