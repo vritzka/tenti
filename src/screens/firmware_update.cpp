@@ -11,7 +11,7 @@ void FirmwareUpdateScreen::render()
     tft.setCursor(30, 50);
     tft.print("New Software arriving");
     
-    tft.setCursor(20, 90);
+    tft.setCursor(25, 90);
     tft.setTextSize(1);
     tft.print("(Please wait, this may take up to 5 minutes)");
     

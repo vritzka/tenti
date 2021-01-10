@@ -148,10 +148,10 @@ void LightScreen::renderDayDuration(int dayDuration)
     
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_LIGHTGREY);
-    tft.setCursor(44,99);
-    tft.print("Lights On");
-    tft.setCursor(55,147);
-    tft.print("Hours");
+    tft.setCursor(48,99);
+    tft.print("LIGHT ON");
+    tft.setCursor(56,147);
+    tft.print("HOURS");
     
 
 }
@@ -180,8 +180,8 @@ void LightScreen::renderLedBrightness() {
     tft.setTextColor(ILI9341_LIGHTGREY);
     tft.setTextSize(1);
     
-    tft.setCursor(216,99);
-    tft.print("Brightness");
+    tft.setCursor(227,99);
+    tft.print("DIMMER");
     
     tft.setCursor(240,142);
     tft.setTextSize(2);
