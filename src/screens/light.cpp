@@ -13,16 +13,16 @@ void LightScreen::render()
     uint16_t dayDuration = tent.state.getDayDuration();
     renderDayDuration(dayDuration);
 
-    buttons.push_back(Button("timerUpBtn", 39, 50, 40, 40, "", 0, 0));
-    buttons.push_back(Button("timerDownBtn", 39, 160, 40, 40, "", 0, 0));
+    buttons.push_back(Button("timerUpBtn", 50, 50, 40, 40, "", 0, 0));
+    buttons.push_back(Button("timerDownBtn", 50, 160, 40, 40, "", 0, 0));
     
-    buttons.push_back(Button("brightnessUpBtn", 180, 50, 40, 40, "", 0, 0));
-    buttons.push_back(Button("brightnessDownBtn", 180, 160, 40, 40, "", 0, 0));
+    buttons.push_back(Button("brightnessUpBtn", 225, 50, 40, 40, "", 0, 0));
+    buttons.push_back(Button("brightnessDownBtn", 225, 160, 40, 40, "", 0, 0));
     
     renderLedBrightness();
     drawTimerStatus();
     
-    buttons.push_back(Button("lightOkBtn", 250, 180, 40, 38, "OK", 9, 12));
+    buttons.push_back(Button("lightOkBtn", 140, 180, 40, 38, "OK", 9, 12));
 
     renderButtons(true);
 }
@@ -125,7 +125,7 @@ void LightScreen::renderDayDuration(int dayDuration)
 {
     int dayDurationHours = dayDuration / 60;
     
-    tft.fillRect(40, 115, 39, 23, ILI9341_BLACK);
+    tft.fillRect(51, 115, 39, 23, ILI9341_BLACK);
     
     tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(3);
@@ -133,31 +133,31 @@ void LightScreen::renderDayDuration(int dayDuration)
     
     if(dayDurationHours < 10)
     {
-        tft.setCursor(52, 116);
+        tft.setCursor(63, 116);
         
     } else if(dayDurationHours >= 20) 
     {
-        tft.setCursor(43, 116);
+        tft.setCursor(54, 116);
         
     } else 
     {
-        tft.setCursor(41, 116);    
+        tft.setCursor(52, 116);    
     }
                  
     tft.print(String(dayDurationHours));
     
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_LIGHTGREY);
-    tft.setCursor(33,99);
+    tft.setCursor(44,99);
     tft.print("Lights On");
-    tft.setCursor(44,147);
+    tft.setCursor(55,147);
     tft.print("Hours");
     
 
 }
 
 void LightScreen::renderLedBrightness() {
-    tft.fillRect(174, 116, 60, 26, ILI9341_BLACK);
+    tft.fillRect(219, 116, 60, 26, ILI9341_BLACK);
     int brightnessPercent = tent.state.getLedBrightnessMax();
     
     tft.setTextColor(ILI9341_WHITE);
@@ -165,14 +165,14 @@ void LightScreen::renderLedBrightness() {
     
     if(brightnessPercent == 100)
     {
-        tft.setCursor(174, 116);
+        tft.setCursor(219, 116);
         
     } else if(brightnessPercent == 5) 
     {
-        tft.setCursor(193, 116);
+        tft.setCursor(238, 116);
         
     } else {
-       tft.setCursor(183, 116); 
+       tft.setCursor(228, 116); 
     }
 
     tft.print(String(brightnessPercent));
@@ -180,10 +180,10 @@ void LightScreen::renderLedBrightness() {
     tft.setTextColor(ILI9341_LIGHTGREY);
     tft.setTextSize(1);
     
-    tft.setCursor(171,99);
+    tft.setCursor(216,99);
     tft.print("Brightness");
     
-    tft.setCursor(195,142);
+    tft.setCursor(240,142);
     tft.setTextSize(2);
     tft.print("%");
 
