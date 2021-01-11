@@ -121,6 +121,7 @@ float TentState::getFanSpeedMin()
 void TentState::setFanSpeedMin(float fanSpeedMin)
 {
     eeprom.fanSpeedMin = fanSpeedMin;
+    save();
 }
 
 float TentState::getFanSpeedMax()
@@ -131,6 +132,7 @@ float TentState::getFanSpeedMax()
 void TentState::setFanSpeedMax(float fanSpeedMax)
 {
     eeprom.fanSpeedMax = fanSpeedMax;
+    save()
 }
 
 float TentState::getTargetTemperature()
