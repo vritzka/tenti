@@ -3,6 +3,7 @@
 TentState::TentState()
 {
     EEPROM.get(0, eeprom);
+    EEPROM.get(sizeof(eeprom), eeprom2);
 }
 
 void TentState::begin()
@@ -113,62 +114,71 @@ void TentState::setFanSpeed(float fanSpeed)
     save();
 }
 
-float TentState::getFanSpeedMin()
+uint8_t TentState::getFanSpeedMin()
 {
-    return eeprom.fanSpeedMin;
+    return eeprom2.fanSpeedMin;
 }
 
 void TentState::setFanSpeedMin(float fanSpeedMin)
 {
-    eeprom.fanSpeedMin = fanSpeedMin;
+    eeprom2.fanSpeedMin = fanSpeedMin;
     save();
 }
 
-float TentState::getFanSpeedMax()
+uint8_t TentState::getFanSpeedMax()
 {
-    return eeprom.fanSpeedMax;
+    return eeprom2.fanSpeedMax;
 }
 
 void TentState::setFanSpeedMax(float fanSpeedMax)
 {
-    eeprom.fanSpeedMax = fanSpeedMax;
+    eeprom2.fanSpeedMax = fanSpeedMax;
     save();
 }
 
 float TentState::getTargetTemperature()
 {
-    return eeprom.targetTemperature;
+    return eeprom2.targetTemperature;
 }
 
 void TentState::setTargetTemperature(float targetTemperature)
 {
-    eeprom.targetTemperature = targetTemperature;
+    eeprom2.targetTemperature = targetTemperature;
     save();
 }
 
 float TentState::getTargetHumidity()
 {
-    return eeprom.targetHumidity;
+    return eeprom2.targetHumidity;
 }
 
 void TentState::setTargetHumidity(float targetHumidity)
 {
-    eeprom.targetHumidity = targetHumidity;
+    eeprom2.targetHumidity = targetHumidity;
     save();
 }
 
-int TentState::getLedBrightnessMax() 
+uint8_t TentState::getLedBrightnessMax() 
 {
-    return eeprom.ledBrightnessMax;
+    return eeprom2.ledBrightnessMax;
 }
 
 void TentState::setLedBrightnessMax(int brightness)
 {
-    eeprom.ledBrightnessMax = brightness;
+    eeprom2.ledBrightnessMax = brightness;
     save();
+}
+
+uint8_t TentState::getVersion(void)
+{
+    return eeprom2.version;
 }
 
 void TentState::save()
 {
     EEPROM.put(0, eeprom);
+    EEPROM.put(sizeof(eeprom), eeprom2);
 }
+
+
+

@@ -37,7 +37,10 @@ void Tent::setup()
 
     // was there a grow/dry in process before (re)booting?
     if (state.getDayCount() > -1) {
-        state.migrate();
+        
+        if(state.getVersion() != 2) {
+            state.migrate();   
+        }
 
         if (state.isDay()) { // was the light on when we restarted?
             growLight("HIGH");
