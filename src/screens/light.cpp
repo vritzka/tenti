@@ -16,11 +16,20 @@ void LightScreen::render()
     buttons.push_back(Button("timerUpBtn", 50, 50, 40, 40, "", 0, 0));
     buttons.push_back(Button("timerDownBtn", 50, 160, 40, 40, "", 0, 0));
     
+    buttons.push_back(Button("nowLeftBtn", 120, 60, 30, 30, "", 0, 0));
+    buttons.push_back(Button("nowRightBtn", 170, 60, 30, 30, "", 0, 0));
+
     buttons.push_back(Button("brightnessUpBtn", 225, 50, 40, 40, "", 0, 0));
     buttons.push_back(Button("brightnessDownBtn", 225, 160, 40, 40, "", 0, 0));
     
+    tft.setCursor(152,105);
+    tft.setTextColor(ILI9341_LIGHTGREY);
+    tft.setTextSize(1);
+    tft.print("NOW");
+     
     renderLedBrightness();
     drawTimerStatus();
+    renderTimeline();
     
     buttons.push_back(Button("lightOkBtn", 140, 180, 40, 38, "OK", 9, 12));
 
@@ -44,11 +53,17 @@ void LightScreen::renderButton(Button& btn)
     } else if (btn.getName() == "timerDownBtn") {
         drawButtonTriangleDown(btn, ILI9341_RED);
 
+    } else if (btn.getName() == "nowRightBtn") {
+        drawButtonTriangleRight(btn, ILI9341_RED);
+
+    } else if (btn.getName() == "nowLeftBtn") {
+        drawButtonTriangleLeft(btn, ILI9341_RED);
+
     } else if (btn.getName() == "brightnessUpBtn") {
-        drawButtonTriangleUp(btn, ILI9341_RED);
+        drawButtonTriangleUp(btn, ILI9341_CYAN);
 
     } else if (btn.getName() == "brightnessDownBtn") {
-        drawButtonTriangleDown(btn, ILI9341_RED);
+        drawButtonTriangleDown(btn, ILI9341_CYAN);
 
     } else if (btn.getName() == "lightOkBtn") {
         drawButton(btn, ILI9341_OLIVE, 2);
@@ -63,6 +78,12 @@ void LightScreen::renderButtonPressed(Button& btn)
     } else if (btn.getName() == "timerDownBtn") {
         drawButtonTriangleDown(btn, ILI9341_WHITE);
         
+    } else if (btn.getName() == "nowRightBtn") {
+        drawButtonTriangleRight(btn, ILI9341_WHITE);
+
+    } else if (btn.getName() == "nowLeftBtn") {
+        drawButtonTriangleLeft(btn, ILI9341_WHITE);
+
     } else if (btn.getName() == "brightnessUpBtn") {
         drawButtonTriangleUp(btn, ILI9341_WHITE);
 
@@ -76,22 +97,113 @@ void LightScreen::handleButton(Button& btn)
 {
     if (btn.getName() == "timerUpBtn") {
         int dayDuration = tent.state.getDayDuration() + 60;
-        if (dayDuration > 1440) {
-            dayDuration = 60;
-        }
-        tent.state.setDayDuration(dayDuration);
+    
+        if (dayDuration == 1440) {
+            tent.state.setDayDuration(dayDuration);
+            tent.state.setMinutesInPhotoperiod(1);
+        } else if(dayDuration > 1440) {
+            return;
+            dayDuration = 0;
+        } else {
+            tent.state.setDayDuration(dayDuration);  
+        }        
+
         renderDayDuration(dayDuration);
-        drawTimerStatus();
+        drawTimerStatus(true);
+        renderTimeline();
 
     } else if (btn.getName() == "timerDownBtn") {
         int dayDuration = tent.state.getDayDuration() - 60;
-        if (dayDuration <= 0) {
-            dayDuration = 1440;
+        
+        if (dayDuration == 0) {
+            tent.state.setDayDuration(dayDuration);
+            tent.state.setMinutesInPhotoperiod(1);
+        } else if(dayDuration < 0) {
+            return;
+        } else {
+            tent.state.setDayDuration(dayDuration);  
         }
-        tent.state.setDayDuration(dayDuration);
+        
         renderDayDuration(dayDuration);
-        drawTimerStatus();
+        drawTimerStatus(true);
+        renderTimeline();
 
+    } else if(btn.getName() == "nowRightBtn") {
+        
+        uint16_t dayDuration = tent.state.getDayDuration();
+        uint16_t nightDuration = 1440 - dayDuration;
+        uint16_t minutesInPhotoperiod = tent.state.getMinutesInPhotoperiod();
+        uint16_t minutesLeftinPhotoperiod;
+        
+        if(dayDuration == 0 || dayDuration == 1440)
+            return;
+    
+        if(tent.state.isDay())
+        {
+            minutesLeftinPhotoperiod = dayDuration - minutesInPhotoperiod;
+                
+            if(minutesLeftinPhotoperiod <= 60) {
+                tent.state.setIsDay(false);   
+                tent.growLight("OFF");
+                minutesInPhotoperiod = 60 - minutesLeftinPhotoperiod;
+            } else {
+               minutesInPhotoperiod += 60; 
+            }
+                
+        } else {
+                minutesLeftinPhotoperiod = ((24*60)-dayDuration) - minutesInPhotoperiod;
+                
+                if(minutesLeftinPhotoperiod <= 60) {
+                    tent.state.setIsDay(true);   
+                    tent.growLight("HIGH");
+                    minutesInPhotoperiod = 60 - minutesLeftinPhotoperiod;
+                } else {
+                    minutesInPhotoperiod += 60;    
+                }
+        }
+
+        tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod);
+        renderTimeline();
+        drawTimerStatus(true);
+
+    } else if(btn.getName() == "nowLeftBtn") {
+        
+        uint16_t dayDuration = tent.state.getDayDuration();
+        uint16_t nightDuration = 1440 - dayDuration;
+        uint16_t minutesInPhotoperiod = tent.state.getMinutesInPhotoperiod();
+        uint16_t minutesLeftinPhotoperiod;
+        
+        if(dayDuration == 0 || dayDuration == 1440)
+            return;
+    
+        if(tent.state.isDay())
+        {
+            minutesLeftinPhotoperiod = dayDuration - minutesInPhotoperiod;
+                
+            if(minutesInPhotoperiod <= 60) {
+                tent.state.setIsDay(false);   
+                tent.growLight("OFF");
+                minutesInPhotoperiod = nightDuration-(60 - minutesInPhotoperiod);
+            } else {
+               minutesInPhotoperiod -= 60; 
+            }
+                
+        } else {
+                minutesLeftinPhotoperiod = nightDuration - minutesInPhotoperiod;
+                
+                if(minutesInPhotoperiod <= 60) {
+                    tent.state.setIsDay(true);   
+                    tent.growLight("HIGH");
+                    minutesInPhotoperiod = dayDuration - (60 - minutesInPhotoperiod);
+                } else {
+                    minutesInPhotoperiod -= 60;    
+                }
+        }
+
+        tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod);
+        renderTimeline();
+        drawTimerStatus(true);
+    
     } else if(btn.getName() == "brightnessUpBtn") {
         int brightness = tent.state.getLedBrightnessMax();
         if(brightness == 100)
@@ -99,7 +211,9 @@ void LightScreen::handleButton(Button& btn)
             
         brightness += 10;
         tent.state.setLedBrightnessMax(brightness);
-        tent.growLight("HIGH");
+        if(tent.state.isDay())
+            tent.growLight("HIGH");
+        
         renderLedBrightness();
         drawTimerStatus();
         screenManager.markNeedsRedraw(DIMMED);
@@ -111,7 +225,9 @@ void LightScreen::handleButton(Button& btn)
             
         brightness -= 10;
         tent.state.setLedBrightnessMax(brightness);
-        tent.growLight("HIGH");
+        if(tent.state.isDay())
+            tent.growLight("HIGH");
+            
         renderLedBrightness(); 
         drawTimerStatus();
         screenManager.markNeedsRedraw(DIMMED);
@@ -148,8 +264,8 @@ void LightScreen::renderDayDuration(int dayDuration)
     
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_LIGHTGREY);
-    tft.setCursor(48,99);
-    tft.print("LIGHT ON");
+    tft.setCursor(50,99);
+    tft.print("DAYTIME");
     tft.setCursor(56,147);
     tft.print("HOURS");
     
@@ -187,4 +303,37 @@ void LightScreen::renderLedBrightness() {
     tft.setTextSize(2);
     tft.print("%");
 
+}
+
+void LightScreen::renderTimeline() {
+    
+    uint16_t leftBoundary = 190;
+    uint8_t length = 100;
+    uint16_t rightBoundary = leftBoundary+length;
+    uint16_t lineY = 28;
+    uint16_t coloredBoxHeight = 10;
+    uint16_t nowPos;
+    
+    uint16_t dayDuration = tent.state.getDayDuration();
+    uint16_t nightDuration = (24*60) - dayDuration;
+    uint16_t minutesInPhotoperiod = tent.state.getMinutesInPhotoperiod();
+    
+    tft.fillRect(leftBoundary-1, lineY-13, (rightBoundary-leftBoundary)+2, coloredBoxHeight+7, ILI9341_BLACK);
+    
+    uint16_t dayBoxLength = map(dayDuration,0,1440,0,rightBoundary-leftBoundary);
+    uint16_t nightBoxLength = (rightBoundary-leftBoundary) - dayBoxLength;
+
+    tft.fillRect(leftBoundary,lineY-coloredBoxHeight,dayBoxLength,coloredBoxHeight, ILI9341_YELLOW);
+    tft.fillRect(leftBoundary+dayBoxLength+1,lineY-coloredBoxHeight,nightBoxLength,coloredBoxHeight, ILI9341_BLUE);
+    
+    if(tent.state.isDay()) {
+        nowPos = map(minutesInPhotoperiod,0,dayDuration,0,dayBoxLength);
+    } else {
+        nowPos = dayBoxLength+map(minutesInPhotoperiod,0,nightDuration,0,nightBoxLength);
+    }
+    
+    uint8_t indicatorWidth = 2;
+    tft.fillRect(leftBoundary+nowPos-(indicatorWidth/2),lineY-(coloredBoxHeight+3),indicatorWidth,coloredBoxHeight+6,ILI9341_RED);
+    
+    
 }

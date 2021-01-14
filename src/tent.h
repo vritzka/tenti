@@ -67,7 +67,7 @@ public:
     void stop();
 
     void adjustFan();
-    void countMinute();
+    void countMinute(bool ignoreDayCounter=false);
     void minutelyTick();
 
     void checkInputs();

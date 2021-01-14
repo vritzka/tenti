@@ -70,6 +70,19 @@ void Screen::drawButtonTriangleDown(Button& btn, int color)
     tft.drawTriangle(btn.x0, btn.y0, btn.x0 + btn.w / 2, btn.y1, btn.x1, btn.y0, ILI9341_LIGHTGREY);
 }
 
+void Screen::drawButtonTriangleRight(Button& btn, int color)
+{
+    tft.fillTriangle(btn.x0, btn.y1, btn.x0, btn.y0, btn.x1, btn.y0 + btn.h / 2, color);
+    tft.drawTriangle(btn.x0, btn.y1, btn.x0, btn.y0, btn.x1, btn.y0 + btn.h / 2, ILI9341_LIGHTGREY);
+}
+
+void Screen::drawButtonTriangleLeft(Button& btn, int color)
+{
+    tft.fillTriangle(btn.x0, btn.y0 + btn.h / 2, btn.x1, btn.y0, btn.x1, btn.y1, color);
+    tft.drawTriangle(btn.x0, btn.y0 + btn.h / 2, btn.x1, btn.y0, btn.x1, btn.y1, ILI9341_LIGHTGREY);
+}
+
+
 void Screen::drawFanStatus()
 {
     tft.fillRect(200, 10, 56, 35, ILI9341_BLACK);
@@ -93,7 +106,7 @@ void Screen::drawFanStatus()
     }
 }
 
-void Screen::drawTimerStatus()
+void Screen::drawTimerStatus(bool ignoreDayCounter)
 {
     int hoursLeft;
     int minutesLeft;
@@ -101,32 +114,32 @@ void Screen::drawTimerStatus()
 
     if (tent.state.isDay()) {
         tft.setTextColor(ILI9341_YELLOW);
-        hoursLeft = floor((tent.state.getDayDuration() - tent.state.getMinutesInPhotoperiod()) / 60);
+        hoursLeft = ((tent.state.getDayDuration() - tent.state.getMinutesInPhotoperiod()) / 60);
         minutesLeft = (tent.state.getDayDuration() - tent.state.getMinutesInPhotoperiod()) % 60;
     } else {
         tft.setTextColor(ILI9341_BLUE);
-        hoursLeft = floor((((24 * 60) - tent.state.getDayDuration()) - tent.state.getMinutesInPhotoperiod()) / 60);
+        hoursLeft = ((((24 * 60) - tent.state.getDayDuration()) - tent.state.getMinutesInPhotoperiod()) / 60);
         minutesLeft = (((24 * 60) - tent.state.getDayDuration()) - tent.state.getMinutesInPhotoperiod()) % 60;
     }
 
     if (hoursLeft < 0 || minutesLeft < 0) {
 
-        tent.countMinute();
+        tent.countMinute(ignoreDayCounter);
 
     } else {
 
         tft.fillRect(5, 5, 137, 37, ILI9341_BLACK);
-
-        tft.setCursor(50, 10);
-        tft.setTextSize(2);
-
-        tft.print(String(hoursLeft));
-        tft.setTextSize(1);
-        tft.print("hrs ");
-        tft.setTextSize(2);
-        tft.print("" + String(minutesLeft));
-        tft.setTextSize(1);
-        tft.print("min");
+        if(tent.state.getDayDuration() != 1440 && tent.state.getDayDuration() != 0) {
+            tft.setCursor(50, 10);
+            tft.setTextSize(2);
+            tft.print(String(hoursLeft));
+            tft.setTextSize(1);
+            tft.print("hrs ");
+            tft.setTextSize(2);
+            tft.print("" + String(minutesLeft));
+            tft.setTextSize(1);
+            tft.print("min");
+        }
 
         tft.setCursor(53, 31);
         tft.setTextSize(1);
@@ -142,7 +155,6 @@ void Screen::drawTimerStatus()
             if(maxBrightness < 100) {
                 tft.setCursor(18,20);
                 tft.setTextColor(ILI9341_DARKGREY);
-                //tft.print(String(maxBrightness));
                 uint16_t c = maxBrightness/10;
                 if(c < 1)
                     c = 1;
@@ -155,7 +167,11 @@ void Screen::drawTimerStatus()
             
         } else {
             tft.drawBitmap(7, 5, moon_and_stars_36, 36, 36, ILI9341_BLUE);
-            tft.print("until sunrise");
+            if(tent.state.getDayDuration() == 0) {
+                tft.print("always off");
+            } else {
+                tft.print("until sunrise");
+            }
         }
     }
 }
