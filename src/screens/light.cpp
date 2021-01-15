@@ -96,14 +96,33 @@ void LightScreen::renderButtonPressed(Button& btn)
 void LightScreen::handleButton(Button& btn)
 {
     if (btn.getName() == "timerUpBtn") {
-        int dayDuration = tent.state.getDayDuration() + 60;
-    
+        int16_t dayDuration = tent.state.getDayDuration();
+        int16_t minutesInPhotoperiod = tent.state.getMinutesInPhotoperiod();
+        uint16_t nightDuration = 1440 - dayDuration;
+        bool isDay = tent.state.isDay();
+        
+        dayDuration += 60;
+        
+        if(dayDuration > 1440)
+            return;
+            
+            
+         if(!isDay) {
+
+            minutesInPhotoperiod -= 60; 
+            
+            if(minutesInPhotoperiod < 0) {
+                tent.state.setIsDay(true);
+                tent.growLight("HIGH");
+                minutesInPhotoperiod = dayDuration + minutesInPhotoperiod;
+            }
+            
+            tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod);
+        }
+
         if (dayDuration == 1440) {
             tent.state.setDayDuration(dayDuration);
-            tent.state.setMinutesInPhotoperiod(1);
-        } else if(dayDuration > 1440) {
-            return;
-            dayDuration = 0;
+            tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod);
         } else {
             tent.state.setDayDuration(dayDuration);  
         }        
@@ -113,13 +132,32 @@ void LightScreen::handleButton(Button& btn)
         renderTimeline();
 
     } else if (btn.getName() == "timerDownBtn") {
-        int dayDuration = tent.state.getDayDuration() - 60;
+        int16_t dayDuration = tent.state.getDayDuration();
+        int16_t minutesInPhotoperiod = tent.state.getMinutesInPhotoperiod();
+        uint16_t nightDuration = 1440 - dayDuration;
+        bool isDay = tent.state.isDay();
         
+        dayDuration -= 60;
+        
+        if(dayDuration < 0) {
+            return;
+        }
+            
+        if(isDay) {
+            
+            if(minutesInPhotoperiod > dayDuration) {
+                tent.state.setIsDay(false);
+                tent.growLight("OFF");
+                minutesInPhotoperiod = minutesInPhotoperiod - dayDuration;
+            }
+            tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod);    
+            
+        } else {
+            tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod+60);
+        }  
+            
         if (dayDuration == 0) {
             tent.state.setDayDuration(dayDuration);
-            tent.state.setMinutesInPhotoperiod(1);
-        } else if(dayDuration < 0) {
-            return;
         } else {
             tent.state.setDayDuration(dayDuration);  
         }
@@ -154,9 +192,7 @@ void LightScreen::handleButton(Button& btn)
                 minutesLeftinPhotoperiod = ((24*60)-dayDuration) - minutesInPhotoperiod;
                 
                 if(minutesLeftinPhotoperiod <= 60) {
-                    tent.state.setIsDay(true);   
-                    tent.growLight("HIGH");
-                    minutesInPhotoperiod = 60 - minutesLeftinPhotoperiod;
+                    return;
                 } else {
                     minutesInPhotoperiod += 60;    
                 }
@@ -181,9 +217,7 @@ void LightScreen::handleButton(Button& btn)
             minutesLeftinPhotoperiod = dayDuration - minutesInPhotoperiod;
                 
             if(minutesInPhotoperiod <= 60) {
-                tent.state.setIsDay(false);   
-                tent.growLight("OFF");
-                minutesInPhotoperiod = nightDuration-(60 - minutesInPhotoperiod);
+                minutesInPhotoperiod = 0;
             } else {
                minutesInPhotoperiod -= 60; 
             }
@@ -332,8 +366,10 @@ void LightScreen::renderTimeline() {
         nowPos = dayBoxLength+map(minutesInPhotoperiod,0,nightDuration,0,nightBoxLength);
     }
     
-    uint8_t indicatorWidth = 2;
-    tft.fillRect(leftBoundary+nowPos-(indicatorWidth/2),lineY-(coloredBoxHeight+3),indicatorWidth,coloredBoxHeight+6,ILI9341_RED);
+    if(dayDuration < 1440 && nightDuration < 1440) {
+        uint8_t indicatorWidth = 2;
+        tft.fillRect(leftBoundary+nowPos-(indicatorWidth/2),lineY-(coloredBoxHeight+3),indicatorWidth,coloredBoxHeight+6,ILI9341_RED);
+    }
     
     
 }
