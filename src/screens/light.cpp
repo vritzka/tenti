@@ -29,7 +29,6 @@ void LightScreen::render()
      
     renderLedBrightness();
     drawTimerStatus();
-    renderTimeline();
     
     buttons.push_back(Button("lightOkBtn", 140, 180, 40, 38, "OK", 9, 12));
 
@@ -129,7 +128,6 @@ void LightScreen::handleButton(Button& btn)
 
         renderDayDuration(dayDuration);
         drawTimerStatus(true);
-        renderTimeline();
 
     } else if (btn.getName() == "timerDownBtn") {
         int16_t dayDuration = tent.state.getDayDuration();
@@ -164,7 +162,6 @@ void LightScreen::handleButton(Button& btn)
         
         renderDayDuration(dayDuration);
         drawTimerStatus(true);
-        renderTimeline();
 
     } else if(btn.getName() == "nowRightBtn") {
         
@@ -199,7 +196,6 @@ void LightScreen::handleButton(Button& btn)
         }
 
         tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod);
-        renderTimeline();
         drawTimerStatus(true);
 
     } else if(btn.getName() == "nowLeftBtn") {
@@ -235,7 +231,6 @@ void LightScreen::handleButton(Button& btn)
         }
 
         tent.state.setMinutesInPhotoperiod(minutesInPhotoperiod);
-        renderTimeline();
         drawTimerStatus(true);
     
     } else if(btn.getName() == "brightnessUpBtn") {
@@ -298,8 +293,8 @@ void LightScreen::renderDayDuration(int dayDuration)
     
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_LIGHTGREY);
-    tft.setCursor(50,99);
-    tft.print("DAYTIME");
+    tft.setCursor(47,99);
+    tft.print("DAYLIGHT");
     tft.setCursor(56,147);
     tft.print("HOURS");
     
@@ -337,39 +332,4 @@ void LightScreen::renderLedBrightness() {
     tft.setTextSize(2);
     tft.print("%");
 
-}
-
-void LightScreen::renderTimeline() {
-    
-    uint16_t leftBoundary = 190;
-    uint8_t length = 100;
-    uint16_t rightBoundary = leftBoundary+length;
-    uint16_t lineY = 28;
-    uint16_t coloredBoxHeight = 10;
-    uint16_t nowPos;
-    
-    uint16_t dayDuration = tent.state.getDayDuration();
-    uint16_t nightDuration = (24*60) - dayDuration;
-    uint16_t minutesInPhotoperiod = tent.state.getMinutesInPhotoperiod();
-    
-    tft.fillRect(leftBoundary-1, lineY-13, (rightBoundary-leftBoundary)+2, coloredBoxHeight+7, ILI9341_BLACK);
-    
-    uint16_t dayBoxLength = map(dayDuration,0,1440,0,rightBoundary-leftBoundary);
-    uint16_t nightBoxLength = (rightBoundary-leftBoundary) - dayBoxLength;
-
-    tft.fillRect(leftBoundary,lineY-coloredBoxHeight,dayBoxLength,coloredBoxHeight, ILI9341_YELLOW);
-    tft.fillRect(leftBoundary+dayBoxLength+1,lineY-coloredBoxHeight,nightBoxLength,coloredBoxHeight, ILI9341_BLUE);
-    
-    if(tent.state.isDay()) {
-        nowPos = map(minutesInPhotoperiod,0,dayDuration,0,dayBoxLength);
-    } else {
-        nowPos = dayBoxLength+map(minutesInPhotoperiod,0,nightDuration,0,nightBoxLength);
-    }
-    
-    if(dayDuration < 1440 && nightDuration < 1440) {
-        uint8_t indicatorWidth = 2;
-        tft.fillRect(leftBoundary+nowPos-(indicatorWidth/2),lineY-(coloredBoxHeight+3),indicatorWidth,coloredBoxHeight+6,ILI9341_RED);
-    }
-    
-    
 }

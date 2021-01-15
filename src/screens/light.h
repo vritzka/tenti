@@ -15,6 +15,5 @@ public:
 private:
     void renderDayDuration(int dayDuration);
     void renderLedBrightness();
-    void renderTimeline();
 };
 #endif

@@ -5,7 +5,7 @@ void GrowStartedScreen::render()
 {
     tft.fillScreen(ILI9341_OLIVE);
 
-    tft.drawBitmap(187, 160, plant_filled_72x72, 72, 72, ILI9341_WHITE);
+    tft.drawBitmap(184, 160, plant_filled_72x72, 72, 72, ILI9341_WHITE);
 }
 
 void GrowStartedScreen::update()
