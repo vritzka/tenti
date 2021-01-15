@@ -7,7 +7,6 @@
 class TentState {
     
     struct {
-        char mode; // g=growing, d=dryimg
         int dayCounter; // counting days the grow or dry was active. Starting from 1
         bool isDay; // true if the light is on
         int minutesInPhotoperiod; // how long has the system been in current photoperiod?  E.g. 31 minutes in NIGHT
@@ -16,6 +15,7 @@ class TentState {
         float fanSpeed; // 0-100%
         char tempUnit; // F or C
         bool wifiStatus; // 1=on, 0=off
+        char mode; // g=growing, d=dryimg
     } eeprom;
     
      struct {
@@ -33,7 +33,6 @@ public:
     
     void init()
     {
-        eeprom.mode = 'g';
         eeprom.dayCounter = -1;
         eeprom.isDay = true;
         eeprom.minutesInPhotoperiod = 0;
@@ -42,6 +41,7 @@ public:
         eeprom.fanSpeed = 30;
         eeprom.tempUnit = 'F';
         eeprom.wifiStatus = 1;
+        eeprom.mode = 'g';
         
         eeprom2.version = 2;
         eeprom2.targetTemperature = 77.0;

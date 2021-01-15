@@ -104,7 +104,7 @@ void setup()
     System.on(setup_end, setup_finished_handler);
 
     WiFi.setHostname("TomatoTent-" + System.deviceID());
-     
+    
     screenManager.setup();
     screenManager.homeScreen();
     tent.setup();
