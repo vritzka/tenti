@@ -37,7 +37,10 @@ void Tent::setup()
 
     // was there a grow/dry in process before (re)booting?
     if (state.getDayCount() > -1) {
-        state.migrate();
+        
+        if(state.getVersion() != 2) {
+            state.migrate();   
+        }
 
         if (state.isDay()) { // was the light on when we restarted?
             growLight("HIGH");
@@ -384,7 +387,7 @@ int16_t Tent::getDisplayBrightness(void)
     return displayBrightness;
 }
 
-void Tent::countMinute()
+void Tent::countMinute(bool ignoreDayCounter)
 {
     state.setMinutesInPhotoperiod(state.getMinutesInPhotoperiod() + 1);
 
@@ -408,7 +411,8 @@ void Tent::countMinute()
     } else {
         if (state.getMode() == 'g') {
             if (minutesInPeriod > nightDuration) { //night is over (growing)
-                state.setDayCount(state.getDayCount() + 1);
+                if(!ignoreDayCounter)
+                    state.setDayCount(state.getDayCount() + 1);
                 growLight("HIGH");
                 state.setIsDay(true);
                 state.setMinutesInPhotoperiod(0);

@@ -5,7 +5,7 @@
 #include "math.h"
 
 class TentState {
-
+    
     struct {
         char mode; // g=growing, d=dryimg
         int dayCounter; // counting days the grow or dry was active. Starting from 1
@@ -16,16 +16,21 @@ class TentState {
         float fanSpeed; // 0-100%
         char tempUnit; // F or C
         bool wifiStatus; // 1=on, 0=off
+    } eeprom;
+    
+     struct {
+        uint8_t version;
         float targetTemperature;
         float targetHumidity;
-        float fanSpeedMin;
-        float fanSpeedMax;
-        int ledBrightnessMax;
-    } eeprom;
+        uint8_t fanSpeedMin;
+        uint8_t fanSpeedMax;
+        uint8_t ledBrightnessMax;
+    } eeprom2;  
+    
 
 public:
     TentState();
-
+    
     void init()
     {
         eeprom.mode = 'g';
@@ -37,38 +42,27 @@ public:
         eeprom.fanSpeed = 30;
         eeprom.tempUnit = 'F';
         eeprom.wifiStatus = 1;
-        eeprom.targetTemperature = 77.0;
-        eeprom.targetHumidity = 50.0;
-        eeprom.fanSpeedMin = 15;
-        eeprom.fanSpeedMax = 40;
-        eeprom.ledBrightnessMax = 100;
+        
+        eeprom2.version = 2;
+        eeprom2.targetTemperature = 77.0;
+        eeprom2.targetHumidity = 70.0;
+        eeprom2.fanSpeedMin = 25;
+        eeprom2.fanSpeedMax = 50;
+        eeprom2.ledBrightnessMax = 100;
         save();
     }
+    
     void migrate()
     {
-        //updating earlier versions
-        if (getTempUnit() != 'F' && getTempUnit() != 'C') {
-            setTempUnit('F');
-
-        } else if (isnan(getFanSpeedMin())) {
-            setFanSpeedMin(15);
-
-        } else if (isnan(getFanSpeedMax())) {
-            setFanSpeedMax(40);
-
-        } else if (isnan(getTargetTemperature())) {
-            setTargetTemperature(77.0);
-
-        } else if (isnan(getTargetHumidity())) {
-            setTargetHumidity(50.0);
-
-        } else if (getMode() != 'g' && getMode() != 'd') {
-            setMode('g');
-            
-        } else if (getLedBrightnessMax() < 0) {
-            setLedBrightnessMax(100);
-        }
+        eeprom2.version = 2;
+        eeprom2.targetTemperature = 77.0;
+        eeprom2.targetHumidity = 50.0;
+        eeprom2.fanSpeedMin = 15;
+        eeprom2.fanSpeedMax = 40;
+        eeprom2.ledBrightnessMax = 100;
+        save();
     }
+    
     void begin();
     void save();
 
@@ -93,10 +87,10 @@ public:
     float getFanSpeed(void);
     void setFanSpeed(float);
 
-    float getFanSpeedMin(void);
+    uint8_t getFanSpeedMin(void);
     void setFanSpeedMin(float);
 
-    float getFanSpeedMax(void);
+    uint8_t getFanSpeedMax(void);
     void setFanSpeedMax(float);
 
     char getTempUnit(void);
@@ -111,6 +105,10 @@ public:
     float getTargetHumidity(void);
     void setTargetHumidity(float);
     
-    int getLedBrightnessMax(void);
+    uint8_t getLedBrightnessMax(void);
     void setLedBrightnessMax(int);
+    
+    uint8_t getVersion(void);
+    
+    
 };
