@@ -454,18 +454,20 @@ void Tent::adjustFan()
         float fanReactHumLow;
         float fanReactHumHigh;
         float fanSpeedPercentbyHumidity;
+        int8_t tempDiffinF = 4;
+        int8_t humDiff = 5;
 
         if(tempUnit == 'F')
         {
             tentTemperature = sensors.tentTemperatureF;
-            fanReactTempLow = targetTemperature - 3;
-            fanReactTempHigh = targetTemperature + 5;
+            fanReactTempLow = targetTemperature - tempDiffinF;
+            fanReactTempHigh = targetTemperature + tempDiffinF;
                 
         } else if(tempUnit == 'C')
         {
             tentTemperature = sensors.tentTemperatureC;
-            fanReactTempLow = targetTemperature - 2;
-            fanReactTempHigh = targetTemperature + 4;
+            fanReactTempLow = targetTemperature - 2.22;
+            fanReactTempHigh = targetTemperature + 2.22;
             
         }
 

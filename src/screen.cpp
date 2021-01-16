@@ -175,8 +175,6 @@ void Screen::drawTimerStatus(bool ignoreDayCounter)
         }
     }
     
-    
-    
     uint16_t leftBoundary = 50;
     uint8_t length = 100;
     uint16_t rightBoundary = leftBoundary+length;
