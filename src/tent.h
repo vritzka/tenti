@@ -67,14 +67,14 @@ public:
     void stop();
 
     void adjustFan();
-    void countMinute(bool ignoreDayCounter=false);
+    void countMinute(bool ignoreDayCounter = false);
     void minutelyTick();
 
     void checkInputs();
     void checkSensors();
     void checkTent();
     void checkSoil();
-    
+
     float convertFtoC(float tempF);
     float convertCtoF(float tempC);
 

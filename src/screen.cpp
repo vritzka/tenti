@@ -82,7 +82,6 @@ void Screen::drawButtonTriangleLeft(Button& btn, int color)
     tft.drawTriangle(btn.x0, btn.y0 + btn.h / 2, btn.x1, btn.y0, btn.x1, btn.y1, ILI9341_LIGHTGREY);
 }
 
-
 void Screen::drawFanStatus()
 {
     tft.fillRect(200, 10, 56, 35, ILI9341_BLACK);
@@ -129,44 +128,44 @@ void Screen::drawTimerStatus(bool ignoreDayCounter)
     } else {
 
         tft.fillRect(4, 4, 147, 37, ILI9341_BLACK);
-        if(tent.state.getDayDuration() != 1440 && tent.state.getDayDuration() != 0) {
+        if (tent.state.getDayDuration() != 1440 && tent.state.getDayDuration() != 0) {
             tft.setCursor(50, 27);
             tft.setTextSize(1);
             tft.print(String(hoursLeft));
             tft.print(":");
             tft.print(String(minutesLeft));
-            if(hoursLeft > 1) {
+            if (hoursLeft > 1) {
                 tft.print(" hrs ");
             } else {
-                tft.print(" hr ");  
+                tft.print(" hr ");
             }
         }
 
         if (tent.state.isDay()) {
             tft.drawBitmap(4, 4, sun_36, 36, 36, ILI9341_YELLOW);
 
-            if(tent.state.getDayDuration() == 1440) {
+            if (tent.state.getDayDuration() == 1440) {
                 tft.setCursor(50, 27);
                 tft.print("always on");
             } else {
-                tft.print("to dusk"); 
+                tft.print("to dusk");
             }
-            
-            if(maxBrightness < 100) {
+
+            if (maxBrightness < 100) {
                 tft.setTextColor(ILI9341_DARKGREY);
-                uint16_t c = maxBrightness/10;
-                if(c < 1)
+                uint16_t c = maxBrightness / 10;
+                if (c < 1)
                     c = 1;
                 uint16_t r = 11;
-                while(r >= c) {
-                    tft.drawCircle(22,21,r,ILI9341_BLACK);
+                while (r >= c) {
+                    tft.drawCircle(22, 21, r, ILI9341_BLACK);
                     r -= 1;
                 }
             }
-            
+
         } else {
             tft.drawBitmap(4, 4, moon_and_stars_36, 36, 36, ILI9341_BLUE);
-            if(tent.state.getDayDuration() == 0) {
+            if (tent.state.getDayDuration() == 0) {
                 tft.setCursor(50, 27);
                 tft.print("off");
             } else {
@@ -174,37 +173,35 @@ void Screen::drawTimerStatus(bool ignoreDayCounter)
             }
         }
     }
-    
+
     uint16_t leftBoundary = 50;
     uint8_t length = 100;
-    uint16_t rightBoundary = leftBoundary+length;
+    uint16_t rightBoundary = leftBoundary + length;
     uint16_t lineY = 21;
     uint16_t coloredBoxHeight = 10;
     uint16_t nowPos;
-    
+
     uint16_t dayDuration = tent.state.getDayDuration();
-    uint16_t nightDuration = (24*60) - dayDuration;
+    uint16_t nightDuration = (24 * 60) - dayDuration;
     uint16_t minutesInPhotoperiod = tent.state.getMinutesInPhotoperiod();
-    
-    uint16_t dayBoxLength = map(dayDuration,0,1440,0,rightBoundary-leftBoundary);
-    uint16_t nightBoxLength = (rightBoundary-leftBoundary) - dayBoxLength;
 
-    tft.fillRect(leftBoundary,lineY-coloredBoxHeight,dayBoxLength,coloredBoxHeight, ILI9341_YELLOW);
-    tft.fillRect(leftBoundary+dayBoxLength+1,lineY-coloredBoxHeight,nightBoxLength,coloredBoxHeight, ILI9341_BLUE);
-    
-    if(tent.state.isDay()) {
-        nowPos = map(minutesInPhotoperiod,0,dayDuration,0,dayBoxLength);
+    uint16_t dayBoxLength = map(dayDuration, 0, 1440, 0, rightBoundary - leftBoundary);
+    uint16_t nightBoxLength = (rightBoundary - leftBoundary) - dayBoxLength;
+
+    tft.fillRect(leftBoundary, lineY - coloredBoxHeight, dayBoxLength, coloredBoxHeight, ILI9341_YELLOW);
+    tft.fillRect(leftBoundary + dayBoxLength + 1, lineY - coloredBoxHeight, nightBoxLength, coloredBoxHeight, ILI9341_BLUE);
+
+    if (tent.state.isDay()) {
+        nowPos = map(minutesInPhotoperiod, 0, dayDuration, 0, dayBoxLength);
     } else {
-        nowPos = dayBoxLength+map(minutesInPhotoperiod,0,nightDuration,0,nightBoxLength);
+        nowPos = dayBoxLength + map(minutesInPhotoperiod, 0, nightDuration, 0, nightBoxLength);
     }
-    
-    if(dayDuration < 1440 && nightDuration < 1440) {
-        uint8_t indicatorWidth = 2;
-        tft.fillRect(leftBoundary+nowPos-(indicatorWidth/2),lineY-(coloredBoxHeight+3),indicatorWidth,coloredBoxHeight+6,ILI9341_RED);
-    }    
-    
-}
 
+    if (dayDuration < 1440 && nightDuration < 1440) {
+        uint8_t indicatorWidth = 2;
+        tft.fillRect(leftBoundary + nowPos - (indicatorWidth / 2), lineY - (coloredBoxHeight + 3), indicatorWidth, coloredBoxHeight + 6, ILI9341_RED);
+    }
+}
 
 void Screen::update()
 {

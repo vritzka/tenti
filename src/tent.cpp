@@ -37,9 +37,9 @@ void Tent::setup()
 
     // was there a grow/dry in process before (re)booting?
     if (state.getDayCount() > -1) {
-        
-        if(state.getVersion() != 2) {
-            state.migrate();   
+
+        if (state.getVersion() != 2) {
+            state.migrate();
         }
 
         if (state.isDay()) { // was the light on when we restarted?
@@ -267,7 +267,7 @@ void Tent::publishMetrics()
 
 int Tent::growLight(String brightness)
 {
-    int maxBrightness = map(state.getLedBrightnessMax(),0,133,0,255);   //the dimmer hardware produces 10V @ about 70%
+    int maxBrightness = map(state.getLedBrightnessMax(), 0, 133, 0, 255); //the dimmer hardware produces 10V @ about 70%
     if (brightness == "HIGH") {
         analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, maxBrightness, 25000);
         digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
@@ -277,8 +277,8 @@ int Tent::growLight(String brightness)
         rawSensors.lightBrightness = brightnessForSensor;
 
     } else if (brightness == "LOW") {
-        int maxBrightness = map(state.getLedBrightnessMax(),0,133,0,255); 
-        if(minBrightness < maxBrightness) {
+        int maxBrightness = map(state.getLedBrightnessMax(), 0, 133, 0, 255);
+        if (minBrightness < maxBrightness) {
             analogWrite(GROW_LIGHT_BRIGHTNESS_PIN, minBrightness, 25000);
             digitalWrite(GROW_LIGHT_ON_OFF_PIN, HIGH);
         }
@@ -307,7 +307,7 @@ String Tent::getGrowLightStatus()
 
 void Tent::fadeGrowLight(String mode, int percent)
 {
-    int maxBrightness = map(state.getLedBrightnessMax(),0,133,0,255); 
+    int maxBrightness = map(state.getLedBrightnessMax(), 0, 133, 0, 255);
     int brightnessRange = maxBrightness - minBrightness;
     int brightness = maxBrightness / 2;
     if (mode == "SUNRISE") {
@@ -350,7 +350,7 @@ bool Tent::displayLightHigh()
         while (displayBrightness < 255) {
             displayBrightness += 5;
             analogWrite(TFT_BRIGHTNESS_PIN, displayBrightness);
-            
+
             delay(5);
         }
         RGB.brightness(255);
@@ -411,7 +411,7 @@ void Tent::countMinute(bool ignoreDayCounter)
     } else {
         if (state.getMode() == 'g') {
             if (minutesInPeriod > nightDuration) { //night is over (growing)
-                if(!ignoreDayCounter)
+                if (!ignoreDayCounter)
                     state.setDayCount(state.getDayCount() + 1);
                 growLight("HIGH");
                 state.setIsDay(true);
@@ -444,7 +444,7 @@ void Tent::adjustFan()
     } else {
         float fanSpeedPercent;
         float fanReactTempLow;
-        float fanReactTempHigh;        
+        float fanReactTempHigh;
         char tempUnit = state.getTempUnit();
         float tentTemperature;
         float fanSpeedMinSetting = state.getFanSpeedMin();
@@ -457,53 +457,43 @@ void Tent::adjustFan()
         int8_t tempDiffinF = 4;
         int8_t humDiff = 5;
 
-        if(tempUnit == 'F')
-        {
+        if (tempUnit == 'F') {
             tentTemperature = sensors.tentTemperatureF;
             fanReactTempLow = targetTemperature - tempDiffinF;
             fanReactTempHigh = targetTemperature + tempDiffinF;
-                
-        } else if(tempUnit == 'C')
-        {
+
+        } else if (tempUnit == 'C') {
             tentTemperature = sensors.tentTemperatureC;
             fanReactTempLow = targetTemperature - 2.22;
             fanReactTempHigh = targetTemperature + 2.22;
-            
         }
 
-        if (tentTemperature < fanReactTempLow) 
-        {
+        if (tentTemperature < fanReactTempLow) {
             fanSpeedPercent = fanSpeedMinSetting;
-            
-        } else if (tentTemperature >= fanReactTempLow && tentTemperature <= fanReactTempHigh)
-        {
+
+        } else if (tentTemperature >= fanReactTempLow && tentTemperature <= fanReactTempHigh) {
             fanSpeedPercent = map(tentTemperature, fanReactTempLow, fanReactTempHigh, fanSpeedMinSetting, fanSpeedMaxSetting);
             fanSpeedPercent = ceil(fanSpeedPercent);
-            
-        } else if(tentTemperature > fanReactTempHigh) {
+
+        } else if (tentTemperature > fanReactTempHigh) {
             fanSpeedPercent = fanSpeedMaxSetting;
-            
         }
 
         fanReactHumLow = targetHumidity - 2;
         fanReactHumHigh = targetHumidity + 3;
-        
-        if (sensors.tentHumidity < fanReactHumLow) 
-        {
+
+        if (sensors.tentHumidity < fanReactHumLow) {
             fanSpeedPercentbyHumidity = fanSpeedMinSetting;
-            
-        } else if(sensors.tentHumidity >= fanReactHumLow && sensors.tentHumidity <= fanReactHumHigh) 
-        {
+
+        } else if (sensors.tentHumidity >= fanReactHumLow && sensors.tentHumidity <= fanReactHumHigh) {
             fanSpeedPercentbyHumidity = map(sensors.tentHumidity, fanReactHumLow, fanReactHumHigh, fanSpeedMinSetting, fanSpeedMaxSetting);
             fanSpeedPercentbyHumidity = ceil(fanSpeedPercentbyHumidity);
-            
-        } else if(sensors.tentHumidity > fanReactHumHigh)
-        {
+
+        } else if (sensors.tentHumidity > fanReactHumHigh) {
             fanSpeedPercentbyHumidity = fanSpeedMaxSetting;
-            
-        } 
-        
-        if(fanSpeedPercentbyHumidity > fanSpeedPercent)
+        }
+
+        if (fanSpeedPercentbyHumidity > fanSpeedPercent)
             fanSpeedPercent = fanSpeedPercentbyHumidity;
 
         if (fanSpeedPercent > fanSpeedMaxSetting)
@@ -523,10 +513,10 @@ void Tent::adjustFan()
 
 float Tent::convertFtoC(float tempF)
 {
-    return (tempF-32)*0.5556;
+    return (tempF - 32) * 0.5556;
 }
 
 float Tent::convertCtoF(float tempC)
 {
-    return (tempC*1.8)+32;
+    return (tempC * 1.8) + 32;
 }

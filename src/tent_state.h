@@ -5,7 +5,7 @@
 #include "math.h"
 
 class TentState {
-    
+
     struct {
         int dayCounter; // counting days the grow or dry was active. Starting from 1
         bool isDay; // true if the light is on
@@ -17,20 +17,19 @@ class TentState {
         bool wifiStatus; // 1=on, 0=off
         char mode; // g=growing, d=dryimg
     } eeprom;
-    
-     struct {
+
+    struct {
         uint8_t version;
         float targetTemperature;
         float targetHumidity;
         uint8_t fanSpeedMin;
         uint8_t fanSpeedMax;
         uint8_t ledBrightnessMax;
-    } eeprom2;  
-    
+    } eeprom2;
 
 public:
     TentState();
-    
+
     void init()
     {
         eeprom.dayCounter = -1;
@@ -42,7 +41,7 @@ public:
         eeprom.tempUnit = 'F';
         eeprom.wifiStatus = 1;
         eeprom.mode = 'g';
-        
+
         eeprom2.version = 2;
         eeprom2.targetTemperature = 78.0;
         eeprom2.targetHumidity = 70.0;
@@ -51,7 +50,7 @@ public:
         eeprom2.ledBrightnessMax = 100;
         save();
     }
-    
+
     void migrate()
     {
         eeprom2.version = 2;
@@ -62,7 +61,7 @@ public:
         eeprom2.ledBrightnessMax = 100;
         save();
     }
-    
+
     void begin();
     void save();
 
@@ -104,11 +103,9 @@ public:
 
     float getTargetHumidity(void);
     void setTargetHumidity(float);
-    
+
     uint8_t getLedBrightnessMax(void);
     void setLedBrightnessMax(int);
-    
+
     uint8_t getVersion(void);
-    
-    
 };

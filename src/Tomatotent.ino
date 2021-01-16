@@ -86,16 +86,15 @@ STARTUP(
     pinMode(TFT_BRIGHTNESS_PIN, OUTPUT);
     pinMode(GROW_LIGHT_BRIGHTNESS_PIN, OUTPUT);
     pinMode(GROW_LIGHT_ON_OFF_PIN, OUTPUT);
-    pinMode(DIM_PIN, INPUT_PULLUP);
-)
+    pinMode(DIM_PIN, INPUT_PULLUP);)
 
 void firmware_update_handler(system_event_t event, int status)
 {
-    if(status == firmware_update_begin) {
-        screenManager.firmwareUpdateScreen();    
+    if (status == firmware_update_begin) {
+        screenManager.firmwareUpdateScreen();
     }
 }
-    
+
 void setup()
 {
     System.set(SYSTEM_CONFIG_SOFTAP_PREFIX, "TomatoTent");
@@ -104,15 +103,14 @@ void setup()
     System.on(setup_end, setup_finished_handler);
 
     WiFi.setHostname("TomatoTent-" + System.deviceID());
-    
+
     screenManager.setup();
     screenManager.homeScreen();
     tent.setup();
-    
-    System.on(firmware_update, firmware_update_handler); 
-    
+
+    System.on(firmware_update, firmware_update_handler);
+
     server.begin();
-    
 }
 
 void loop(void)

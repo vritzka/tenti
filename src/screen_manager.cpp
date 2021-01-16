@@ -26,11 +26,12 @@ void ScreenManager::setup()
 void ScreenManager::tick()
 {
     if (ts.touched()) {
-        
-        if(tent.getDisplayBrightness() == 0) {
+
+        if (tent.getDisplayBrightness() == 0) {
             tent.displayLightHigh();
             unsigned long waitUntil = millis() + 800;
-            while(millis() < waitUntil) {}
+            while (millis() < waitUntil) {
+            }
             return;
         }
         tent.displayLightHigh();

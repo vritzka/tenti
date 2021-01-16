@@ -10,12 +10,11 @@ void FirmwareUpdateScreen::render()
 
     tft.setCursor(30, 50);
     tft.print("New Software arriving");
-    
+
     tft.setCursor(25, 90);
     tft.setTextSize(1);
     tft.print("(Please wait, this may take up to 5 minutes)");
-    
-    
+
     tft.drawBitmap(192, 180, tomato_filled_50, 50, 50, ILI9341_RED);
 }
 

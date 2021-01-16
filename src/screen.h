@@ -15,7 +15,7 @@ protected:
     void drawButtonTriangleRight(Button& btn, int color);
     void drawButtonTriangleLeft(Button& btn, int color);
     void drawFanStatus();
-    void drawTimerStatus(bool ignoreDayCounter=false);
+    void drawTimerStatus(bool ignoreDayCounter = false);
     void drawDimmedIndicator();
     void hideDimmedIndicator();
 

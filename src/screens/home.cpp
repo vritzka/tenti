@@ -248,7 +248,7 @@ void HomeScreen::renderButton(Button& btn)
         drawButton(btn, ILI9341_OLIVE, 3);
     } else if (btn.getName() == "wifiBtn") {
         tft.drawBitmap(btn.x0 + 19, btn.y0 + 5, iconWifi_24x24, 24, 24, WiFi.ready() ? ILI9341_LIGHTGREY : ILI9341_DARKGREY);
-    } 
+    }
 }
 
 void HomeScreen::renderButtonPressed(Button& btn)
