@@ -13,14 +13,14 @@ void LightScreen::render()
     uint16_t dayDuration = tent.state.getDayDuration();
     renderDayDuration(dayDuration);
 
-    buttons.push_back(Button("timerUpBtn", 45, 55, 40, 40, "", 0, 0));
-    buttons.push_back(Button("timerDownBtn", 45, 165, 40, 40, "", 0, 0));
+    buttons.push_back(Button("timerUpBtn", 40, 55, 40, 40, "", 0, 0));
+    buttons.push_back(Button("timerDownBtn", 40, 165, 40, 40, "", 0, 0));
     
     buttons.push_back(Button("nowLeftBtn", 120, 60, 30, 30, "", 0, 0));
     buttons.push_back(Button("nowRightBtn", 170, 60, 30, 30, "", 0, 0));
 
-    buttons.push_back(Button("brightnessUpBtn", 230, 55, 40, 40, "", 0, 0));
-    buttons.push_back(Button("brightnessDownBtn", 230, 165, 40, 40, "", 0, 0));
+    buttons.push_back(Button("brightnessUpBtn", 235, 55, 40, 40, "", 0, 0));
+    buttons.push_back(Button("brightnessDownBtn", 235, 165, 40, 40, "", 0, 0));
     
     tft.setCursor(152,99);
     tft.setTextColor(ILI9341_LIGHTGREY);
@@ -270,7 +270,7 @@ void LightScreen::renderDayDuration(int dayDuration)
 {
     int dayDurationHours = dayDuration / 60;
     
-    tft.fillRect(46, 120, 39, 23, ILI9341_BLACK);
+    tft.fillRect(41, 120, 39, 23, ILI9341_BLACK);
     
     tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(3);
@@ -278,31 +278,31 @@ void LightScreen::renderDayDuration(int dayDuration)
     
     if(dayDurationHours < 10)
     {
-        tft.setCursor(58, 121);
+        tft.setCursor(53, 121);
         
     } else if(dayDurationHours >= 20) 
     {
-        tft.setCursor(49, 121);
+        tft.setCursor(44, 121);
         
     } else 
     {
-        tft.setCursor(47, 121);    
+        tft.setCursor(42, 121);    
     }
                  
     tft.print(String(dayDurationHours));
     
     tft.setTextSize(1);
     tft.setTextColor(ILI9341_LIGHTGREY);
-    tft.setCursor(42,104);
+    tft.setCursor(37,104);
     tft.print("DAYLIGHT");
-    tft.setCursor(51,152);
+    tft.setCursor(46,152);
     tft.print("HOURS");
     
 
 }
 
 void LightScreen::renderLedBrightness() {
-    tft.fillRect(224, 121, 60, 26, ILI9341_BLACK);
+    tft.fillRect(229, 121, 60, 26, ILI9341_BLACK);
     int brightnessPercent = tent.state.getLedBrightnessMax();
     
     tft.setTextColor(ILI9341_WHITE);
@@ -310,14 +310,14 @@ void LightScreen::renderLedBrightness() {
     
     if(brightnessPercent == 100)
     {
-        tft.setCursor(224, 121);
+        tft.setCursor(229, 121);
         
     } else if(brightnessPercent == 5) 
     {
-        tft.setCursor(243, 121);
+        tft.setCursor(248, 121);
         
     } else {
-       tft.setCursor(233, 121); 
+       tft.setCursor(238, 121); 
     }
 
     tft.print(String(brightnessPercent));
@@ -325,10 +325,10 @@ void LightScreen::renderLedBrightness() {
     tft.setTextColor(ILI9341_LIGHTGREY);
     tft.setTextSize(1);
     
-    tft.setCursor(232,104);
+    tft.setCursor(237,104);
     tft.print("DIMMER");
     
-    tft.setCursor(245,147);
+    tft.setCursor(250,147);
     tft.setTextSize(2);
     tft.print("%");
 
