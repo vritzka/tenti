@@ -83,6 +83,8 @@ STARTUP(
     softap_set_application_page_handler(myPage, nullptr);
     pinMode(FAN_SPEED_PIN, OUTPUT);
     analogWrite(FAN_SPEED_PIN, 255, 25000);
+    pinMode(FAN_SPEED_OPTICAL_PIN, OUTPUT);
+    analogWrite(FAN_SPEED_OPTICAL_PIN, 255, 25000);
     pinMode(TFT_BRIGHTNESS_PIN, OUTPUT);
     pinMode(GROW_LIGHT_BRIGHTNESS_PIN, OUTPUT);
     pinMode(GROW_LIGHT_ON_OFF_PIN, OUTPUT);
