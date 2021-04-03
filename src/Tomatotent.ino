@@ -99,7 +99,7 @@ void firmware_update_handler(system_event_t event, int status)
 
 void setup()
 {
-    System.set(SYSTEM_CONFIG_SOFTAP_PREFIX, "TomatoTent");
+    System.set(SYSTEM_CONFIG_SOFTAP_PREFIX, "TTNT");
 
     System.on(setup_begin, setup_handler);
     System.on(setup_end, setup_finished_handler);
