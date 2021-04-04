@@ -167,10 +167,10 @@ void Tent::fan(String fanStatus)
 {
     if (fanStatus == "OFF") {
         analogWrite(FAN_SPEED_PIN, 255, 25000);
-        analogWrite(FAN_SPEED_OPTICAL_PIN, 0, 25000);
+        analogWrite(FAN_SPEED_OPTICAL_PIN, 0, 10000);
     } else {
         int fanSpeed = map(state.getFanSpeed(), 0.0, 100.0, 0.0, 255.0);
-        analogWrite(FAN_SPEED_PIN, 255 - fanSpeed, 100000);
+        analogWrite(FAN_SPEED_PIN, 255 - fanSpeed, 25000);
         analogWrite(FAN_SPEED_OPTICAL_PIN, fanSpeed, 100000);
     }
 }
