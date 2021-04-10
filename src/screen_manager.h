@@ -34,7 +34,7 @@ private:
     int redrawMarkers;
     void render();
 
-    XPT2046_Touchscreen ts = XPT2046_Touchscreen(SPI1, 320, 240, TCS_PIN, TIRQ_PIN);
+    XPT2046_Touchscreen ts = XPT2046_Touchscreen(SPI, 320, 240, TCS_PIN, TIRQ_PIN);
 
 public:
     Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);

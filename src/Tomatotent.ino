@@ -6,8 +6,8 @@
 #include "assets.h"
 #include "api_server.h"
 
-PRODUCT_ID(10167);
-PRODUCT_VERSION(26);
+PRODUCT_ID(14251);
+PRODUCT_VERSION(1);
 
 Tent tent;
 ScreenManager screenManager;
